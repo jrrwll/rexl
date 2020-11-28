@@ -1,0 +1,15 @@
+[package]
+name = ""
+version = "0.1.0"
+authors = ["tuke <tukeof@gmail.com>"]
+edition = "2018"
+description = ""
+documentation = ""
+readme = "README.md"
+homepage = ""
+repository = ""
+# https://github.com/spdx/license-list-data/blob/v3.6/licenses.md
+license = "GPL-2.0-or-later"
+keywords = []
+# https://crates.io/category_slugs
+categories = []
