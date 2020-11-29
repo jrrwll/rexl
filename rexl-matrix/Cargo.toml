@@ -1,0 +1,18 @@
+[package]
+name = "rexl_matrix"
+version = "0.0.2"
+authors = ["tuke <tukeof@gmail.com>"]
+edition = "2018"
+description = """
+A simple matrix library for Rust
+"""
+documentation = "https://github.com/bobbystrange/rexl/blob/master/README.md"
+readme = "README.md"
+homepage = "https://github.com/bobbystrange/rexl"
+repository = "https://github.com/bobbystrange/rexl"
+license = "GPL-2.0-or-later"
+keywords = ["matrix"]
+categories = ["mathematics", "algorithms"]
+
+[dependencies]
+rexl = { path = "../rexl", version = "0.0.2", default-features = false }

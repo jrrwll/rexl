@@ -1,1 +1,1 @@
-# A simple math library for Rust
+# A simple Rust library about mathematics, expressions, matrices, etc.

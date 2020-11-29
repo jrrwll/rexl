@@ -1,18 +1,9 @@
-[package]
-name = "rexl"
-version = "0.0.1"
-authors = ["tuke <tukeof@gmail.com>"]
-edition = "2018"
-description = "A simple math library for Rust"
-documentation = "https://github.com/bobbystrange/rexl/blob/master/README.md"
-readme = "README.md"
-homepage = "https://github.com/bobbystrange/rexl"
-repository = "https://github.com/bobbystrange/rexl"
-license = "GPL-2.0-or-later WITH Bison-exception-2.2"
-keywords = ["math", "expression", "matrix"]
-categories = ["mathematics", "algorithms"]
-exclude = [
-    "docs/*"
-]
+[workspace]
+members = [
+    "rexl",
+    "rexl-math",
+    "rexl-matrix",
 
-[dependencies]
+    "examples/the-book",
+    "examples/grammer"
+]
