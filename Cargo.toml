@@ -4,6 +4,8 @@ members = [
     "rexl-math",
     "rexl-matrix",
 
+    "rexl-cli/rfind",
+
     "examples/the-book",
-    "examples/grammer"
+    "examples/grammer",
 ]

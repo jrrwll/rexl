@@ -1,5 +1,7 @@
 #[cfg(test)]
 mod sort;
+#[cfg(test)]
+mod time;
 
 #[test]
 fn it_works() {

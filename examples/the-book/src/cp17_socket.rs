@@ -110,8 +110,7 @@ impl Worker {
                 match job {
                     Some(job) => {
                         println!("Worker {} got a job; executing.", id);
-                        //(*job)();
-                        job.call()
+                        job()
                     }
                     None => {
                         println!("Worker {} was told to terminate.", id);
@@ -128,15 +127,4 @@ impl Worker {
     }
 }
 
-// hack
-trait FnBox {
-    fn call(self: Box<Self>);
-}
-
-impl<F: FnOnce()> FnBox for F {
-    fn call(self: Box<F>) {
-        (*self)()
-    }
-}
-
-type Job = Box<dyn FnBox + Send + 'static>;
+type Job = Box<dyn FnOnce() + Send + 'static>;

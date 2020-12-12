@@ -16,3 +16,6 @@ categories = ["mathematics", "algorithms"]
 
 [dependencies]
 rexl = { path = "../rexl", version = "0.0.2", default-features = false }
+
+[dev-dependencies]
+matrix = "0.22.0"
