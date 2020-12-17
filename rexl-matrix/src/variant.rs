@@ -1,9 +1,6 @@
-/// A variant of a compressed matrix.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum Variant {
-    /// The compressed-column variant.
     Column,
-    /// The compressed-row variant.
     Row,
 }
 

@@ -1,11 +1,11 @@
-pub use self::multidimensional::*;
 pub use self::ops::*;
+pub use self::iter::*;
 
-mod multidimensional;
 mod ops;
+mod iter;
 
 use std::ptr;
-use crate::{Size, Element};
+use crate::{Size, Element, Matrix, Variant};
 
 /// A conventional matrix based on a multidimensional array
 #[derive(Clone, Debug, PartialEq)]
@@ -33,8 +33,6 @@ impl<T: Element> Multidimensional<T> {
     /// Create a matrix from a vector.
     pub fn from_vec<S: Size>(size: S, values: Vec<Vec<T>>) -> Self {
         let (rows, columns) = size.dimensions();
-        debug_assert!(values.len() == columns && values.len() > 0);
-        debug_assert_eq!(values.len() * values[0].len(), rows * columns);
         Multidimensional {
             rows,
             columns,
@@ -51,10 +49,6 @@ impl<T: Element> Multidimensional<T> {
         self.each_column(#[inline] |value|{
             ptr::write_bytes(value.as_mut_ptr(), 0, value.len());
         });
-        // let values = &mut self.values;
-        // for value in values {
-        //     ptr::write_bytes(value.as_mut_ptr(), 0, value.len());
-        // }
     }
 
     /// Resize.
@@ -94,5 +88,49 @@ impl<T: Element> Multidimensional<T> {
                 .map(|elem| format!("{:?}", elem))
                 .collect::<Vec<String>>().join(", "))
             .collect::<Vec<String>>().join("\n")
+    }
+
+    pub fn iter(&self, variant: Variant) -> MultidimensionalIterator<T> {
+        let (rows, columns) = self.dimensions();
+        MultidimensionalIterator {
+            matrix: self,
+            row_size: rows,
+            column_size: columns,
+            row_offset: 0,
+            column_offset: 0,
+            variant,
+        }
+    }
+
+    pub fn iter_mut(&mut self, variant: Variant) -> MultidimensionalIteratorMut<T> {
+        let (rows, columns) = self.dimensions();
+        MultidimensionalIteratorMut {
+            matrix: self,
+            row_size: rows,
+            column_size: columns,
+            row_offset: 0,
+            column_offset: 0,
+            variant,
+        }
+    }
+}
+
+impl<T: Element> Matrix for Multidimensional<T> {
+    type Element = T;
+
+    fn nonzeros(&self) -> usize {
+        self.values.iter().map(|value| {
+            value.iter().fold(0, |sum, &elem|
+                if elem.is_zero() { sum } else { sum + 1 })
+        }).sum()
+    }
+
+    #[inline]
+    fn zero<S: Size>(size: S) -> Self {
+        Self::new(size)
+    }
+
+    fn augment_vec_assign(&mut self, vector: &Vec<Self::Element>) {
+        self.values.push(vector.clone());
     }
 }

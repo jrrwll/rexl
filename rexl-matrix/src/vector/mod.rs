@@ -1,4 +1,3 @@
-mod convert;
 mod ops;
 mod iter;
 
@@ -21,6 +20,7 @@ impl<T: Element> From<Vec<T>> for Vector<T> {
 }
 
 impl <T: Element> Into<Vec<T>> for Vector<T> {
+    #[inline]
     fn into(self) -> Vec<T> {
         self.data
     }

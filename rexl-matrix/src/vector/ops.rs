@@ -5,12 +5,14 @@ use crate::{Element, Vector};
 impl<T: Element> Index<usize> for Vector<T> {
     type Output = T;
 
+    #[inline]
     fn index(&self, index: usize) -> &Self::Output {
         &self.data[index]
     }
 }
 
 impl<T: Element> IndexMut<usize> for Vector<T> {
+    #[inline]
     fn index_mut(&mut self, index: usize) -> &mut Self::Output {
         &mut self.data[index]
     }

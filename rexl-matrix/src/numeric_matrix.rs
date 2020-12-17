@@ -14,37 +14,6 @@ ElementaryTransformation<<Self as NumericMatrix>::Element>{
     Neg<Output=<Self as NumericMatrix>::Element>;
 
     /// build
-    fn one<S: Size>(size: S) -> Self {
-        let mut this = Self::zero(size);
-        let (rows, columns) = this.dimensions();
-
-        for i in 0..rows {
-            for j in 0..columns {
-                this[(i, j)] = <Self as NumericMatrix>::Element::one();
-            }
-        }
-        this
-    }
-
-    fn eye<S: Size>(size: S) -> Self {
-        let mut this = Self::zero(size);
-        let dimension = this.min_dimension();
-
-        for i in 0..dimension {
-            this[(i, i)] = <Self as NumericMatrix>::Element::one();
-        }
-        this
-    }
-
-    fn diag(diag: &Vec<<Self as NumericMatrix>::Element>) -> Self {
-        let mut this = Self::zero(diag.len());
-        let dimension = this.min_dimension();
-
-        for i in 0..dimension {
-            this[(i, i)] = diag[i];
-        }
-        this
-    }
 
     fn pascal<S: Size>(size: S) -> Self {
         let mut this = Self::zero(size);
