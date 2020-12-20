@@ -1,6 +1,5 @@
 use std::ops::*;
-use std::cmp;
-use crate::{Element, NumericElement};
+use crate::{Element};
 use crate::format::Conventional;
 
 impl<T: Element> Index<(usize, usize)> for Conventional<T> {

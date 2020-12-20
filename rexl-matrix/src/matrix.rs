@@ -1,7 +1,6 @@
 use crate::{Size, Element, Vector};
 use std::ops::*;
 use std::cmp;
-use std::io::repeat;
 
 /// A matrix.
 pub trait Matrix:
