@@ -6,11 +6,11 @@ edition = "2018"
 description = """
 A simple matrix library for Rust
 """
-documentation = "https://github.com/bobbystrange/rexl/blob/master/README.md"
+documentation = "https://github.com/bobbystrange/rexl/blob/master/rexl-matrix/README.md"
 readme = "README.md"
-homepage = "https://github.com/bobbystrange/rexl"
-repository = "https://github.com/bobbystrange/rexl"
-license = "GPL-2.0-or-later"
+homepage = "https://github.com/bobbystrange/rexl/tree/master/rexl-matrix"
+repository = "https://github.com/bobbystrange/rexl/tree/master/rexl-matrix"
+license = "MIT OR Apache-2.0"
 keywords = ["matrix"]
 categories = ["mathematics", "algorithms"]
 
