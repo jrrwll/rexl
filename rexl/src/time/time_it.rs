@@ -11,7 +11,7 @@ pub struct Timeit {
     /// repeat times, one action avg time is `the result or run()` / repeat
     /// such as one action cost 1ms, if repeat=12 then total cost almost equal 12ms
     repeat: u32,
-    /// use parallel stream to execute
+    /// use parallel io to execute
     parallel: bool,
     ///v
     actions: Vec<FnBox>,

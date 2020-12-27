@@ -1,24 +1,31 @@
-use crate::cli::{ArgParser, ArgParserError, Argument, ArgumentKind};
 use std::collections::{LinkedList, HashMap};
+use std::hash::Hash;
+
+use crate::cli::*;
+use std::fmt::Debug;
 
 static MULTIPLE_VALUE_SIZE: usize = 16;
 
-impl ArgParser {
+impl<K: Hash + Eq + Debug + Clone> ArgParser<K> {
 
     #[inline]
-    pub fn parse(&mut self, args: Vec<String>) -> Result<(), ArgParserError> {
+    pub fn parse(&mut self, args: Vec<String>) -> Result<(), ArgParserError<K>> {
         self._parse(args, false)
     }
 
     #[inline]
-    pub fn parse_bsd(&mut self, args: Vec<String>) -> Result<(), ArgParserError> {
+    pub fn parse_bsd(&mut self, args: Vec<String>) -> Result<(), ArgParserError<K>> {
         self._parse(args, true)
     }
 
-    fn _parse(&mut self, args: Vec<String>, bsd: bool) -> Result<(), ArgParserError> {
+    fn _parse(&mut self, args: Vec<String>, bsd: bool) -> Result<(), ArgParserError<K>> {
         let mut shift = LinkedList::new();
         for arg in args {
             shift.push_front(arg)
+        }
+        if shift.is_empty() {
+            // no any args is passed
+            return Err(ArgParserError::NoArgs)
         }
 
         self._init_name_key_map();
@@ -28,9 +35,6 @@ impl ArgParser {
         if bsd {
             if let Some(name) = shift.pop_back() {
                 self._parse_bsd_args(&name)?
-            } else {
-                // no any args is passed
-                return Err(ArgParserError::NoArgs)
             }
         }
 
@@ -61,21 +65,21 @@ impl ArgParser {
     fn _init_name_key_map(&mut self) {
         for (key, arg) in self.key_argument_map.iter() {
             for name in arg.names.iter() {
-                self.names_key_map.insert(name.to_string(), key.to_string());
+                self.names_key_map.insert(name.to_string(), key.clone());
             }
         }
     }
 
-    fn _get_key(&self, name: &str) -> Result<(String, Argument), ArgParserError>{
+    fn _get_key(&self, name: &str) -> Result<(K, Argument<K>), ArgParserError<K>>{
         if let Some(key) = self.names_key_map.get(name) {
             if let Some(argument) = self.key_argument_map.get(key) {
-                return Ok((key.to_string(), argument.clone()))
+                return Ok((key.clone(), argument.clone()))
             }
         }
         Err(ArgParserError::UnexpectedArg(name.to_string()))
     }
 
-    fn _parse_bsd_args(&mut self, arg_names: &String) -> Result<(), ArgParserError> {
+    fn _parse_bsd_args(&mut self, arg_names: &String) -> Result<(), ArgParserError<K>> {
         let start_index = if arg_names.starts_with("-") { 1 } else { 0 };
         let size = arg_names.len();
         for i in start_index..size {
@@ -87,7 +91,7 @@ impl ArgParser {
     }
 
     fn _parse_double_minus(&mut self, arg_name: &String, shift: &mut LinkedList<String>)
-        -> Result<(), ArgParserError> {
+        -> Result<(), ArgParserError<K>> {
         let arg_name_len = arg_name.len();
         // treat argument behind `--` as extra values
         if arg_name_len == 2 {
@@ -98,7 +102,7 @@ impl ArgParser {
         let new_arg_name = &arg_name[2..arg_name_len];
         // the case, not `--rm=true` but `--type pom`
         if !new_arg_name.contains("=") {
-            let (key, argument) = self._get_key(arg_name)?;
+            let (key, argument) = self._get_key(new_arg_name)?;
             return self._add_all_forward(key, argument, shift)
         }
         // the case, not `--type pom` but `--rm=true`
@@ -118,7 +122,7 @@ impl ArgParser {
     }
 
     fn _parse_minus(&mut self, arg_name: &String, shift: &mut LinkedList<String>)
-        -> Result<(), ArgParserError> {
+        -> Result<(), ArgParserError<K>> {
         let arg_name_len = arg_name.len();
         // only a `-`
         if arg_name_len == 1 {
@@ -140,7 +144,7 @@ impl ArgParser {
             return self._add_all(key, argument, value.to_string())
         }
         // the case `-f=%h-%m-%s`
-        let ind = new_arg_name.find("=").unwrap();
+        let mut ind = new_arg_name.find("=").unwrap();
         if ind == 0 {
             // the case, `-o=`
             if value.len() == 1 {
@@ -153,6 +157,7 @@ impl ArgParser {
         }
         // the case, `-Dlogger.level=debug`
         argument.check_kind(ArgumentKind::Property)?;
+        ind -= 1;
         let hkey = &value[..ind];
         // the case, `-Dlogger.level=`
         let hval = if value.len() == ind {
@@ -171,11 +176,12 @@ impl ArgParser {
         }
     }
 
-    fn _add_all(&mut self, key: String, argument: Argument, value: String)
-        -> Result<(), ArgParserError>{
+    fn _add_all(&mut self, key: K, argument: Argument<K>, value: String)
+        -> Result<(), ArgParserError<K>>{
         match argument.kind {
             ArgumentKind::Bool => {
-                self.bool_map.insert(key, true);
+                let value = argument.parse_bool(value)?;
+                self.bool_map.insert(key, value);
             }
             ArgumentKind::String => {
                 self.string_map.insert(key, value);
@@ -196,8 +202,8 @@ impl ArgParser {
     }
 
 
-    fn _add_all_forward(&mut self, key: String, argument: Argument, shift: &mut LinkedList<String>)
-        -> Result<(), ArgParserError> {
+    fn _add_all_forward(&mut self, key: K, argument: Argument<K>, shift: &mut LinkedList<String>)
+        -> Result<(), ArgParserError<K>> {
         match argument.kind {
             ArgumentKind::Bool => {
                 self.bool_map.insert(key, true);
@@ -217,7 +223,7 @@ impl ArgParser {
                             return Ok(())
                         }
                         // clone key in a loop
-                        self._add_string_list(key.to_string(), value);
+                        self._add_string_list(key.clone(), value);
                     }
                 }
             }
@@ -228,7 +234,7 @@ impl ArgParser {
                 if !argument.multiple {
                     // unwrap since we check `shift` is not empty
                     let value = argument.parse_i64(shift.pop_back().unwrap())?;
-                    self.integer_map.insert(key.to_string(), value);
+                    self.integer_map.insert(key.clone(), value);
                 } else {
                     while let Some(value) = shift.pop_back() {
                         // reach another argument, then go back
@@ -238,7 +244,7 @@ impl ArgParser {
                         }
 
                         let value = argument.parse_i64(value)?;
-                        self._add_integer_list(key.to_string(), value);
+                        self._add_integer_list(key.clone(), value);
                     }
                 }
             }
@@ -249,7 +255,7 @@ impl ArgParser {
                 if !argument.multiple {
                     // unwrap since we check `shift` is not empty
                     let value = argument.parse_f64(shift.pop_back().unwrap())?;
-                    self.float_map.insert(key.to_string(), value);
+                    self.float_map.insert(key.clone(), value);
                 } else {
                     while let Some(value) = shift.pop_back() {
                         // reach another argument, then go back
@@ -259,7 +265,7 @@ impl ArgParser {
                         }
 
                         let value = argument.parse_f64(value)?;
-                        self._add_float_list(key.to_string(), value);
+                        self._add_float_list(key.clone(), value);
                     }
                 }
             }
@@ -270,7 +276,7 @@ impl ArgParser {
         Ok(())
     }
 
-    fn _add_string_list(&mut self, key: String, value: String) {
+    fn _add_string_list(&mut self, key: K, value: String) {
         if let Some(vec) = self.strings_map.get_mut(&key) {
             vec.push(value);
         } else {
@@ -280,7 +286,7 @@ impl ArgParser {
         }
     }
 
-    fn _add_integer_list(&mut self, key: String, value: i64) {
+    fn _add_integer_list(&mut self, key: K, value: i64) {
         if let Some(vec) = self.integers_map.get_mut(&key) {
             vec.push(value);
         } else {
@@ -290,7 +296,7 @@ impl ArgParser {
         }
     }
 
-    fn _add_float_list(&mut self, key: String, value: f64) {
+    fn _add_float_list(&mut self, key: K, value: f64) {
         if let Some(vec) = self.floats_map.get_mut(&key) {
             vec.push(value);
         } else {
@@ -300,7 +306,7 @@ impl ArgParser {
         }
     }
 
-    fn _add_property(&mut self, key: String, hkey: String, hval: String) {
+    fn _add_property(&mut self, key: K, hkey: String, hval: String) {
         if let Some(props) = self.properties_map.get_mut(&key) {
             props.insert(hkey, hval);
         } else {

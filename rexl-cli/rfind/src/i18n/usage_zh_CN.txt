@@ -1,0 +1,26 @@
+rfind 文件系统查找与替换的命令行工具，Unix `find` 的Rust 版本
+
+用法： rfind [选项]... [文件系统路径]...
+
+启动：
+  -v,  --version                    显示 rfind 的版本信息并退出
+  -h,  --help                       打印此帮助
+
+日志：
+  --verbose                         详尽的输出
+
+查找：
+  -a, --all                         搜索时包含隐藏文件
+  -d, --depth <n>                   搜索深度
+  -t,  --type=<type>                指定文件类型：-/f/file文件，d/dir/directory目标，l/link链接，a/all所有
+                                    默认只搜索文件和目录，即-t=file,dir
+  -n,  --name <string>              指定文件名包含的内容
+  -N,  --name-pattern <pattern>     指定文件名包含的内容，使用正则表达式
+  -s,  --size <condition>           指定文件大小的筛选条件
+                                    例如：-s>1.41M,<=3.14G
+  --access-time <condition>         指定文件的访问时间的筛选条件
+                                    例如：--access-time ">2020-10-10 00:00,<=3d"
+  --modify-time <condition>         指定文件的内容修改时间的筛选条件
+  --change-time <condition>         指定文件的元数据修改时间的筛选条件
+  -c, --content <string>            指定文件内容包含的内容
+  -C, --content-pattern <pattern>   指定文件内容包含的内容，使用正则表达式

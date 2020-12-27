@@ -1,6 +1,6 @@
 [package]
 name = "rexl"
-version = "0.0.2"
+version = "0.0.3"
 authors = ["tuke <tukeof@gmail.com>"]
 edition = "2018"
 description = """
@@ -11,5 +11,5 @@ readme = "README.md"
 homepage = "https://github.com/bobbystrange/rexl"
 repository = "https://github.com/bobbystrange/rexl"
 license = "GPL-2.0-or-later"
-keywords = ["algorithms", "expression"]
+keywords = ["algorithms", "expression", "argparser", "timeit", "interpolation"]
 categories = ["mathematics", "algorithms"]

@@ -1,0 +1,22 @@
+use std::collections::HashMap;
+use rexl::text::load_properties_from_str;
+use rexl::interpolate::{brace_unwrap};
+
+#[derive(Debug)]
+pub struct Context {
+    pub usage: &'static str,
+    message: HashMap<String, String>,
+}
+
+impl Context {
+    pub fn new(usage: &'static str, message: &'static str) -> Self {
+        Self {
+            usage,
+            message: load_properties_from_str(message),
+        }
+    }
+
+    pub fn format(&self, key: &'static str, args: Vec<String>) -> String {
+        brace_unwrap(&self.message[key], args)
+    }
+}

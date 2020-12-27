@@ -1,5 +1,9 @@
+extern crate rexl;
+
 #[cfg(test)]
 mod cli;
+#[cfg(test)]
+mod interpolate;
 #[cfg(test)]
 mod sort;
 #[cfg(test)]

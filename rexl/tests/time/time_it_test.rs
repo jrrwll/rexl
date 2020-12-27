@@ -1,9 +1,8 @@
-extern crate rexl;
-
 use rexl::time::*;
 
+#[ignore]
 #[test]
-fn test() {
+fn test_time_it() {
     let ts = Timeit::new()
         .add_unary_action(|| {1}, |_|{
             // println!("invoke 1");
@@ -28,5 +27,6 @@ fn test() {
         } )
         .repeat(10).count(20).skip(5)
         .run_and_format_us("\t");
+    // output like: 85.131us	7.026us	30633.678us	33903.761us	164.901us
     println!("{}", ts);
 }

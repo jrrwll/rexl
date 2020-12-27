@@ -1,5 +1,3 @@
-extern crate rexl;
-
 use rexl::*;
 
 #[test]

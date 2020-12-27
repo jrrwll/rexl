@@ -1,6 +1,7 @@
 use std::error::Error;
 use std::fmt;
 use std::fmt::{Display, Formatter, Debug};
+use std::hash::Hash;
 
 #[derive(Debug, PartialEq, Clone, Copy)]
 pub enum ArgumentKind {
@@ -11,27 +12,44 @@ pub enum ArgumentKind {
     Property,
 }
 
+impl Display for ArgumentKind {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(f, "{:?}", self)
+    }
+}
+
 #[derive(Debug, PartialEq, Clone)]
-pub struct Argument {
+pub struct Argument<K: Hash + Eq + Debug + Clone> {
+    pub key: K,
     pub names: Vec<String>,
     pub kind: ArgumentKind,
     pub multiple: bool,
 }
 
-impl Argument {
+impl<K: Hash + Eq + Debug + Clone> Argument<K> {
 
-    pub fn check_kind(&self, expect: ArgumentKind) -> Result<(), ArgParserError> {
-        let got = self.kind;
-        if got != expect {
+    pub fn check_kind(&self, passed: ArgumentKind) -> Result<(), ArgParserError<K>> {
+        let expect = self.kind;
+        if expect != passed {
             Err(ArgParserError::MismatchedKind(MismatchedKindValue{
-                argument: self.clone(), expect
+                argument: self.clone(), passed
             }))
         } else {
             Ok(())
         }
     }
 
-    pub fn parse_i64(&self, value: String) -> Result<i64, ArgParserError> {
+    pub fn parse_bool(&self, value: String) -> Result<bool, ArgParserError<K>> {
+        value.parse::<bool>().or_else(|e| {
+            Err(ArgParserError::NumberParse(NumberParseValue{
+                argument: self.clone(),
+                source: value,
+                error: e.to_string()
+            }))
+        })
+    }
+
+    pub fn parse_i64(&self, value: String) -> Result<i64, ArgParserError<K>> {
         value.parse::<i64>().or_else(|e| {
             Err(ArgParserError::NumberParse(NumberParseValue{
                 argument: self.clone(),
@@ -41,7 +59,7 @@ impl Argument {
         })
     }
 
-    pub fn parse_f64(&self, value: String) -> Result<f64, ArgParserError> {
+    pub fn parse_f64(&self, value: String) -> Result<f64, ArgParserError<K>> {
         value.parse::<f64>().or_else(|e| {
             Err(ArgParserError::NumberParse(NumberParseValue{
                 argument: self.clone(),
@@ -53,33 +71,33 @@ impl Argument {
 }
 
 #[derive(Debug, PartialEq)]
-pub enum ArgParserError {
+pub enum ArgParserError<K: Hash + Eq + Debug + Clone> {
     NoArgs,
     UnexpectedArg(String),
     // argument, expect
-    MismatchedKind(MismatchedKindValue),
-    MissingValue(Argument),
-    NumberParse(NumberParseValue),
-    NoProperties(Argument),
+    MismatchedKind(MismatchedKindValue<K>),
+    MissingValue(Argument<K>),
+    NumberParse(NumberParseValue<K>),
+    NoProperties(Argument<K>),
 }
 
 #[derive(Debug, PartialEq, Clone)]
-pub struct MismatchedKindValue {
-    pub argument: Argument,
-    pub expect: ArgumentKind,
+pub struct MismatchedKindValue<K: Hash + Eq + Debug + Clone> {
+    pub argument: Argument<K>,
+    pub passed: ArgumentKind,
 }
 
 #[derive(Debug, PartialEq, Clone)]
-pub struct NumberParseValue {
-    pub argument: Argument,
+pub struct NumberParseValue<K: Hash + Eq + Debug + Clone> {
+    pub argument: Argument<K>,
     pub source: String,
     pub error: String,
 }
 
-impl Display for ArgParserError {
+impl<K: Hash + Eq + Debug + Clone> Display for ArgParserError<K> {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         write!(f, "{:?}", self)
     }
 }
 
-impl Error for ArgParserError {}
+impl<K: Hash + Eq + Debug + Clone> Error for ArgParserError<K> {}

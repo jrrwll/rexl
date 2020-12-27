@@ -1,6 +1,14 @@
 use std::cmp::{Ord, Ordering};
 use std::mem;
 
+#[test]
+fn test_swap() {
+    let mut v = [1, 2, 3, 4];
+    println!("{:?}", &v);
+    swap(&mut v, 1, 3);
+    println!("{:?}", &v);
+}
+
 /// just copied from https://stackoverflow.com/questions/28294735/how-to-swap-elements-of-array
 #[allow(dead_code)]
 fn swap<T>(x: &mut [T], i: usize, j: usize) {
