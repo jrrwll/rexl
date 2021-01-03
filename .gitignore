@@ -1,4 +1,12 @@
-/target
-Cargo.lock
+# ENV
 .idea
 .DS_Store
+# cargo
+/target
+Cargo.lock
+# cmake
+CMakeCache.txt
+CMakeFiles/
+Makefile
+cmake-build-debug/
+cmake_install.cmake

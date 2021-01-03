@@ -1,7 +1,7 @@
 [package]
 name = "rexl_math"
 version = "0.0.2"
-authors = ["tuke <tukeof@gmail.com>"]
+authors = ["tuke <bobby.j.strange@gmail.com>"]
 edition = "2018"
 description = """
 A simple mathematics library for Rust
