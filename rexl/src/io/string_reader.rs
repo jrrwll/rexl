@@ -1,5 +1,1 @@
-
-pub struct StringReader {
-
-}
-
+pub struct StringReader {}

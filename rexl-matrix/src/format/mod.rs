@@ -1,14 +1,14 @@
-pub use self::multidimensional::*;
-pub use self::conventional::*;
 pub use self::compressed::*;
+pub use self::conventional::*;
+pub use self::multidimensional::*;
 
-mod multidimensional;
-mod conventional;
 mod compressed;
+mod conventional;
+mod multidimensional;
 
-use std::ops::*;
-use std::cmp;
 use crate::*;
+use std::cmp;
+use std::ops::*;
 
 macro_rules! implement_size {
     ($name:ident) => {
@@ -29,7 +29,13 @@ macro_rules! implement_size {
 macro_rules! implement_numeric_matrix {
     ($name:ident) => {
         impl<T> NumericMatrix for $name<T>
-            where T: NumericElement + Add<Output=T> + Sub<Output=T> + Mul<Output=T> + Div<Output=T> + Neg<Output=T> {
+        where T: NumericElement
+                + Add<Output = T>
+                + Sub<Output = T>
+                + Mul<Output = T>
+                + Div<Output = T>
+                + Neg<Output = T>
+        {
             type Element = T;
         }
     };

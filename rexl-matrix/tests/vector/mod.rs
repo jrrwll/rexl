@@ -1,4 +1,4 @@
-use rexl_matrix::{Vector};
+use rexl_matrix::Vector;
 use std::f64::consts::PI;
 
 #[test]
@@ -14,38 +14,108 @@ fn test_eq_xxx() {
     println!("{}", Vector::line_sq(1, 100, 9));
     println!("{}\n", Vector::line_sq(1.0, 100.0, 9));
 
-    println!("{}", Vector::line_sq_weight(
-        1, 10, vec![1.0, 1.0, 1.0, 2.0, 2.0, 2.0],
-        #[inline] |it| it as i32));
-    println!("{}", Vector::line_sq_weight(
-        1, 22, vec![1.0, 2.0, 3.0, 4.0, 5.0, 6.0],
-        #[inline] |it| it as i32));
-    println!("{}", Vector::line_sq_weight(
-        1, 43, vec![1.0, 2.0, 3.0, 4.0, 5.0, 6.0],
-        #[inline] |it| it as i32));
+    println!(
+        "{}",
+        Vector::line_sq_weight(
+            1,
+            10,
+            vec![1.0, 1.0, 1.0, 2.0, 2.0, 2.0],
+            #[inline]
+            |it| it as i32
+        )
+    );
+    println!(
+        "{}",
+        Vector::line_sq_weight(
+            1,
+            22,
+            vec![1.0, 2.0, 3.0, 4.0, 5.0, 6.0],
+            #[inline]
+            |it| it as i32
+        )
+    );
+    println!(
+        "{}",
+        Vector::line_sq_weight(
+            1,
+            43,
+            vec![1.0, 2.0, 3.0, 4.0, 5.0, 6.0],
+            #[inline]
+            |it| it as i32
+        )
+    );
 
-    println!("{}", Vector::line_sq_weight(
-        1.0, 10.0, vec![1.0, 1.0, 1.0, 2.0, 2.0, 2.0],
-        #[inline] |it| it));
-    println!("{}", Vector::line_sq_weight(
-        1.0, 22.0, vec![1.0, 2.0, 3.0, 4.0, 5.0, 6.0],
-        #[inline] |it| it));
-    println!("{}\n", Vector::line_sq_weight(
-        1.0, 43.0, vec![1.0, 2.0, 3.0, 4.0, 5.0, 6.0],
-        #[inline] |it| it));
+    println!(
+        "{}",
+        Vector::line_sq_weight(
+            1.0,
+            10.0,
+            vec![1.0, 1.0, 1.0, 2.0, 2.0, 2.0],
+            #[inline]
+            |it| it
+        )
+    );
+    println!(
+        "{}",
+        Vector::line_sq_weight(
+            1.0,
+            22.0,
+            vec![1.0, 2.0, 3.0, 4.0, 5.0, 6.0],
+            #[inline]
+            |it| it
+        )
+    );
+    println!(
+        "{}\n",
+        Vector::line_sq_weight(
+            1.0,
+            43.0,
+            vec![1.0, 2.0, 3.0, 4.0, 5.0, 6.0],
+            #[inline]
+            |it| it
+        )
+    );
 
-    println!("{}", Vector::line_sq_weight(
-        1, 80, vec![1.0, 1.0, 1.0, 2.0, 2.0, 2.0],
-        #[inline] |it| it as i32));
-    println!("{}", Vector::line_sq_weight(
-        1, 80, vec![1.0, 2.0, 3.0, 4.0, 5.0, 6.0],
-        #[inline] |it| it as i32));
-    println!("{}", Vector::line_sq_weight(
-        1.0, 80.0, vec![1.0, 1.0, 1.0, 2.0, 2.0, 2.0],
-        #[inline] |it| it));
-    println!("{}\n", Vector::line_sq_weight(
-        1.0, 80.0, vec![1.0, 2.0, 3.0, 4.0, 5.0, 6.0],
-        #[inline] |it| it));
+    println!(
+        "{}",
+        Vector::line_sq_weight(
+            1,
+            80,
+            vec![1.0, 1.0, 1.0, 2.0, 2.0, 2.0],
+            #[inline]
+            |it| it as i32
+        )
+    );
+    println!(
+        "{}",
+        Vector::line_sq_weight(
+            1,
+            80,
+            vec![1.0, 2.0, 3.0, 4.0, 5.0, 6.0],
+            #[inline]
+            |it| it as i32
+        )
+    );
+    println!(
+        "{}",
+        Vector::line_sq_weight(
+            1.0,
+            80.0,
+            vec![1.0, 1.0, 1.0, 2.0, 2.0, 2.0],
+            #[inline]
+            |it| it
+        )
+    );
+    println!(
+        "{}\n",
+        Vector::line_sq_weight(
+            1.0,
+            80.0,
+            vec![1.0, 2.0, 3.0, 4.0, 5.0, 6.0],
+            #[inline]
+            |it| it
+        )
+    );
 }
 
 #[test]
@@ -98,8 +168,13 @@ fn test_vector() {
     assert_eq!(v.dot_mul(&u), 5.0);
 
     let norm: f64 = (1.0f64.powf(2.0) + 2.0f64.powf(2.0) + 3.0f64.powf(2.0)).powf(0.5);
-    println!("sum={}, product={}, average={}, variance={}",
-             v.sum(), v.product(), v.average(), v.variance());
+    println!(
+        "sum={}, product={}, average={}, variance={}",
+        v.sum(),
+        v.product(),
+        v.average(),
+        v.variance()
+    );
     println!("norm={}, {}", v.norm(2.0), norm);
     assert_eq!(v.norm(2.0), norm)
 }

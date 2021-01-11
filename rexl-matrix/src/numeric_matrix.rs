@@ -1,17 +1,17 @@
-use std::ops::*;
-use crate::{Size, Element, NumericElement, Matrix};
 use crate::transform::ElementaryTransformation;
+use crate::{Element, Matrix, NumericElement, Size};
+use std::ops::*;
 
 pub trait NumericMatrix:
-Matrix<Element=<Self as NumericMatrix>::Element> +
-ElementaryTransformation<<Self as NumericMatrix>::Element>{
+    Matrix<Element = <Self as NumericMatrix>::Element>
+    + ElementaryTransformation<<Self as NumericMatrix>::Element> {
     /// The element type.
-    type Element: NumericElement +
-    Add<Output=<Self as NumericMatrix>::Element> +
-    Sub<Output=<Self as NumericMatrix>::Element> +
-    Mul<Output=<Self as NumericMatrix>::Element> +
-    Div<Output=<Self as NumericMatrix>::Element> +
-    Neg<Output=<Self as NumericMatrix>::Element>;
+    type Element: NumericElement
+        + Add<Output = <Self as NumericMatrix>::Element>
+        + Sub<Output = <Self as NumericMatrix>::Element>
+        + Mul<Output = <Self as NumericMatrix>::Element>
+        + Div<Output = <Self as NumericMatrix>::Element>
+        + Neg<Output = <Self as NumericMatrix>::Element>;
 
     /// build
 
@@ -37,11 +37,11 @@ ElementaryTransformation<<Self as NumericMatrix>::Element>{
 
         for i in 0..rows {
             for j in 0..columns {
-               if i == 0 {
-                   this[(i, j)] = <Self as NumericMatrix>::Element::one();
-               } else {
-                   this[(i, j)] = this[(i - 1, j)] * vector[j];
-               }
+                if i == 0 {
+                    this[(i, j)] = <Self as NumericMatrix>::Element::one();
+                } else {
+                    this[(i, j)] = this[(i - 1, j)] * vector[j];
+                }
             }
         }
         this
@@ -53,14 +53,16 @@ ElementaryTransformation<<Self as NumericMatrix>::Element>{
 
         for i in 0..rows {
             for j in 0..columns {
-                this[(i, j)] = <Self as NumericMatrix>::Element::one() /
-                    <Self as NumericMatrix>::Element::from_usize(i + j + 1);
+                this[(i, j)] = <Self as NumericMatrix>::Element::one()
+                    / <Self as NumericMatrix>::Element::from_usize(i + j + 1);
             }
         }
         this
     }
 
-    fn hankel(a: &Vec<<Self as NumericMatrix>::Element>, b: &Vec<<Self as NumericMatrix>::Element>) -> Self {
+    fn hankel(
+        a: &Vec<<Self as NumericMatrix>::Element>, b: &Vec<<Self as NumericMatrix>::Element>,
+    ) -> Self {
         let (rows, columns) = (a.len(), b.len());
         let mut this = Self::zero((rows, columns));
 
@@ -99,11 +101,13 @@ ElementaryTransformation<<Self as NumericMatrix>::Element>{
                         swapped = true;
                         // reverse sign
                         sign_reversed = !sign_reversed;
-                        break;
+                        break
                     }
                 }
                 // if not swapped
-                if !swapped { return None; }
+                if !swapped {
+                    return None
+                }
             }
 
             // kk will not equal zero in this area
@@ -117,8 +121,10 @@ ElementaryTransformation<<Self as NumericMatrix>::Element>{
 
     fn det(&mut self) -> <Self as NumericMatrix>::Element {
         let sign_reversed = match self.diagonalize_triu() {
-            None => { return <Self as NumericMatrix>::Element::zero(); }
-            Some(sign_reversed) => { sign_reversed }
+            None => {
+                return <Self as NumericMatrix>::Element::zero()
+            }
+            Some(sign_reversed) => sign_reversed,
         };
 
         let dimension = self.min_dimension();
@@ -126,7 +132,10 @@ ElementaryTransformation<<Self as NumericMatrix>::Element>{
         for k in 0..dimension {
             result = result * self[(k, k)];
         }
-        if sign_reversed { -result } else { result }
+        if sign_reversed {
+            -result
+        } else {
+            result
+        }
     }
-
 }

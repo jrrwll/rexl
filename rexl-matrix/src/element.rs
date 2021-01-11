@@ -16,7 +16,7 @@ pub trait Element: Copy + PartialEq + Debug {
 }
 
 /// An numeric element
-pub trait NumericElement: Element + {
+pub trait NumericElement: Element {
     /// Convert usize as a `Element`
     fn from_usize(n: usize) -> Self;
 }

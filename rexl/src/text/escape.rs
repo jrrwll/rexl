@@ -1,11 +1,10 @@
-
 pub fn from_backslash(s: &str) -> String {
     from_escape(s, '\\')
 }
 
 pub fn from_escape(s: &str, escape: char) -> String {
     if s.is_empty() {
-        return s.to_string();
+        return s.to_string()
     }
     let size = s.len();
     let mut result = String::with_capacity(size);

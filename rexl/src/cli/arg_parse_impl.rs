@@ -1,4 +1,4 @@
-use std::collections::{LinkedList, HashMap};
+use std::collections::{HashMap, LinkedList};
 use std::hash::Hash;
 
 use crate::cli::*;
@@ -7,7 +7,6 @@ use std::fmt::Debug;
 static MULTIPLE_VALUE_SIZE: usize = 16;
 
 impl<K: Hash + Eq + Debug + Clone> ArgParser<K> {
-
     #[inline]
     pub fn parse(&mut self, args: Vec<String>) -> Result<(), ArgParserError<K>> {
         self._parse(args, false)
@@ -70,7 +69,7 @@ impl<K: Hash + Eq + Debug + Clone> ArgParser<K> {
         }
     }
 
-    fn _get_key(&self, name: &str) -> Result<(K, Argument<K>), ArgParserError<K>>{
+    fn _get_key(&self, name: &str) -> Result<(K, Argument<K>), ArgParserError<K>> {
         if let Some(key) = self.names_key_map.get(name) {
             if let Some(argument) = self.key_argument_map.get(key) {
                 return Ok((key.clone(), argument.clone()))
@@ -83,15 +82,16 @@ impl<K: Hash + Eq + Debug + Clone> ArgParser<K> {
         let start_index = if arg_names.starts_with("-") { 1 } else { 0 };
         let size = arg_names.len();
         for i in start_index..size {
-            let arg_name = &arg_names[i..(i+1)];
+            let arg_name = &arg_names[i..(i + 1)];
             let (key, _) = self._get_key(arg_name)?;
             self.bool_map.insert(key, true);
         }
         Ok(())
     }
 
-    fn _parse_double_minus(&mut self, arg_name: &String, shift: &mut LinkedList<String>)
-        -> Result<(), ArgParserError<K>> {
+    fn _parse_double_minus(
+        &mut self, arg_name: &String, shift: &mut LinkedList<String>,
+    ) -> Result<(), ArgParserError<K>> {
         let arg_name_len = arg_name.len();
         // treat argument behind `--` as extra values
         if arg_name_len == 2 {
@@ -111,7 +111,7 @@ impl<K: Hash + Eq + Debug + Clone> ArgParser<K> {
         let (key, argument) = self._get_key(prefix)?;
 
         // the case `--rm=`
-        if  ind == new_arg_name.len() - 1 {
+        if ind == new_arg_name.len() - 1 {
             argument.check_kind(ArgumentKind::Bool)?;
             self.bool_map.insert(key, true);
             return Ok(())
@@ -121,8 +121,9 @@ impl<K: Hash + Eq + Debug + Clone> ArgParser<K> {
         self._add_all(key, argument, value.to_string())
     }
 
-    fn _parse_minus(&mut self, arg_name: &String, shift: &mut LinkedList<String>)
-        -> Result<(), ArgParserError<K>> {
+    fn _parse_minus(
+        &mut self, arg_name: &String, shift: &mut LinkedList<String>,
+    ) -> Result<(), ArgParserError<K>> {
         let arg_name_len = arg_name.len();
         // only a `-`
         if arg_name_len == 1 {
@@ -164,7 +165,8 @@ impl<K: Hash + Eq + Debug + Clone> ArgParser<K> {
             ""
         } else {
             &value[(ind + 1)..]
-        }.to_string();
+        }
+        .to_string();
         self._add_property(key, hkey.to_string(), hval);
         return Ok(())
     }
@@ -176,8 +178,9 @@ impl<K: Hash + Eq + Debug + Clone> ArgParser<K> {
         }
     }
 
-    fn _add_all(&mut self, key: K, argument: Argument<K>, value: String)
-        -> Result<(), ArgParserError<K>>{
+    fn _add_all(
+        &mut self, key: K, argument: Argument<K>, value: String,
+    ) -> Result<(), ArgParserError<K>> {
         match argument.kind {
             ArgumentKind::Bool => {
                 let value = argument.parse_bool(value)?;
@@ -194,16 +197,14 @@ impl<K: Hash + Eq + Debug + Clone> ArgParser<K> {
                 let value = argument.parse_f64(value)?;
                 self.float_map.insert(key, value);
             }
-            ArgumentKind::Property => {
-                return Err(ArgParserError::NoProperties(argument))
-            }
+            ArgumentKind::Property => return Err(ArgParserError::NoProperties(argument)),
         }
         Ok(())
     }
 
-
-    fn _add_all_forward(&mut self, key: K, argument: Argument<K>, shift: &mut LinkedList<String>)
-        -> Result<(), ArgParserError<K>> {
+    fn _add_all_forward(
+        &mut self, key: K, argument: Argument<K>, shift: &mut LinkedList<String>,
+    ) -> Result<(), ArgParserError<K>> {
         match argument.kind {
             ArgumentKind::Bool => {
                 self.bool_map.insert(key, true);
@@ -269,9 +270,7 @@ impl<K: Hash + Eq + Debug + Clone> ArgParser<K> {
                     }
                 }
             }
-            ArgumentKind::Property => {
-                return Err(ArgParserError::NoProperties(argument.clone()))
-            }
+            ArgumentKind::Property => return Err(ArgParserError::NoProperties(argument.clone())),
         }
         Ok(())
     }
@@ -315,5 +314,4 @@ impl<K: Hash + Eq + Debug + Clone> ArgParser<K> {
             self.properties_map.insert(key, props);
         }
     }
-
 }

@@ -2,7 +2,7 @@
 mod build_test;
 
 use rexl_matrix::format::Multidimensional;
-use rexl_matrix::{Matrix, NumericMatrix, Vector, Variant};
+use rexl_matrix::{Matrix, NumericMatrix, Variant, Vector};
 
 #[test]
 pub fn test() {
@@ -14,7 +14,9 @@ pub fn test() {
     m.resize(3);
     println!("{}\n", m.to_string());
 
-    unsafe { m.erase(); }
+    unsafe {
+        m.erase();
+    }
     println!("{}\n", m.to_string());
 
     let m: Multidimensional<f64> = Multidimensional::zero((4, 3));

@@ -1,5 +1,5 @@
-use std::collections::HashMap;
 use rexl::interpolate::{dollar_named, dollar_positional};
+use std::collections::HashMap;
 
 #[test]
 fn test_dollar() {
@@ -9,11 +9,19 @@ fn test_dollar() {
     context.insert("Bob".to_string(), "Dylan".to_string());
     context.insert(":\\:".to_string(), "colon_backslash_colon".to_string());
     let template = "$$ :: $Eric is a friend of $John, but not a friend of $Bob! ::$$";
-    show_named(template, &context, "$$ :: Clapton is a friend of Lennon, but not a friend of Dylan! ::$$");
+    show_named(
+        template,
+        &context,
+        "$$ :: Clapton is a friend of Lennon, but not a friend of Dylan! ::$$",
+    );
 
     let arguments = vec!["Clapton".to_string(), "Lennon".to_string()];
     let template = "$$ :: $2 is a friend of $1, but not a friend of $3! ::$$";
-    show_positional(template, &arguments, "$$ :: Lennon is a friend of Clapton, but not a friend of NULL! ::$$");
+    show_positional(
+        template,
+        &arguments,
+        "$$ :: Lennon is a friend of Clapton, but not a friend of NULL! ::$$",
+    );
 }
 
 #[test]
@@ -28,7 +36,11 @@ fn test_dollar_named() {
     context.insert("_b_Z".to_string(), "_b_Z_val".to_string());
     context.insert(":".to_string(), "_val".to_string());
     // $$ $ a_val a_Y_0_val _b_Z_val 01 01:02 :: {:}\
-    show_named(template, &context, "$$ $ a_val a_Y_0_val _b_Z_val 01 01:02 :: {:}\\");
+    show_named(
+        template,
+        &context,
+        "$$ $ a_val a_Y_0_val _b_Z_val 01 01:02 :: {:}\\",
+    );
 
     // ${{\:\}\\:{\:\}\\}
     let template = "${{\\:\\}\\\\:{\\:\\}\\\\}";

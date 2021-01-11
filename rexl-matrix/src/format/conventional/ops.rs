@@ -1,6 +1,6 @@
-use std::ops::*;
-use crate::{Element};
 use crate::format::Conventional;
+use crate::Element;
+use std::ops::*;
 
 impl<T: Element> Index<(usize, usize)> for Conventional<T> {
     type Output = T;

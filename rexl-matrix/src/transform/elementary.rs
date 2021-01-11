@@ -1,10 +1,9 @@
-use std::ops::*;
-use crate::Element;
 use crate::format::*;
+use crate::Element;
+use std::ops::*;
 
 /// The elementary transformation of a matrix
 pub trait ElementaryTransformation<T: Element> {
-
     /// row
     fn multiply_row(&mut self, dest: usize, multiply: T);
 
@@ -23,8 +22,8 @@ pub trait ElementaryTransformation<T: Element> {
 macro_rules! implement_elementary_transformation {
     ($name:ident) => {
         impl<T> ElementaryTransformation<T> for $name<T>
-            where T: Element + Add<Output=T> + Mul<Output=T> {
-
+        where T: Element + Add<Output = T> + Mul<Output = T>
+        {
             fn multiply_row(&mut self, dest: usize, multiply: T) {
                 for j in 0..self.columns {
                     self[(dest, j)] = self[(dest, j)] * multiply;

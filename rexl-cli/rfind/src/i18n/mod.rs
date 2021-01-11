@@ -23,11 +23,7 @@ pub unsafe fn load_i18n_config() -> (&'static str, &'static str) {
     }
 
     match LANG {
-        Lang::English => {
-            (USAGE_EN, MESSAGE_EN)
-        }
-        Lang::SimplifiedChinese => {
-            (USAGE_ZH_CN, MESSAGE_ZH_CN)
-        }
+        Lang::English => (USAGE_EN, MESSAGE_EN),
+        Lang::SimplifiedChinese => (USAGE_ZH_CN, MESSAGE_ZH_CN),
     }
 }

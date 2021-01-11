@@ -1,32 +1,31 @@
-pub use self::ops::*;
 pub use self::iter::*;
+pub use self::ops::*;
 
-mod ops;
 mod iter;
+mod ops;
 
+use crate::{Element, Matrix, Size, Variant};
 use std::ptr;
-use crate::{Size, Element, Matrix, Variant};
 
 /// A conventional matrix based on a multidimensional array
 #[derive(Clone, Debug, PartialEq)]
 pub struct Multidimensional<T: Element> {
     /// The number of rows.
-    pub rows: usize,
+    pub rows:    usize,
     /// The number of columns.
     pub columns: usize,
     /// The values stored in the column-major order.
-    pub values: Vec<Vec<T>>,
+    pub values:  Vec<Vec<T>>,
 }
 
 impl<T: Element> Multidimensional<T> {
-
     /// Create a zero matrix.
     pub fn new<S: Size>(size: S) -> Self {
         let (rows, columns) = size.dimensions();
         Multidimensional {
             rows,
             columns,
-            values: vec![vec![T::zero(); rows]; columns]
+            values: vec![vec![T::zero(); rows]; columns],
         }
     }
 
@@ -46,9 +45,12 @@ impl<T: Element> Multidimensional<T> {
     /// zero bytes.
     #[inline]
     pub unsafe fn erase(&mut self) {
-        self.each_column(#[inline] |value|{
-            ptr::write_bytes(value.as_mut_ptr(), 0, value.len());
-        });
+        self.each_column(
+            #[inline]
+            |value| {
+                ptr::write_bytes(value.as_mut_ptr(), 0, value.len());
+            },
+        );
     }
 
     /// Resize.
@@ -59,17 +61,24 @@ impl<T: Element> Multidimensional<T> {
         if old_columns > columns {
             self.values.truncate(columns);
         } else {
-            self.values.extend(vec![vec![T::zero(); rows]; columns - old_columns]);
+            self.values
+                .extend(vec![vec![T::zero(); rows]; columns - old_columns]);
         }
 
         if old_rows > rows {
-            self.each_column(#[inline] |value|{
-                value.truncate(rows);
-            });
+            self.each_column(
+                #[inline]
+                |value| {
+                    value.truncate(rows);
+                },
+            );
         } else {
-            self.each_column(#[inline] |value|{
-                value.extend(vec![T::zero(); rows - old_rows]);
-            });
+            self.each_column(
+                #[inline]
+                |value| {
+                    value.extend(vec![T::zero(); rows - old_rows]);
+                },
+            );
         }
         self.rows = rows;
         self.columns = columns;
@@ -83,11 +92,17 @@ impl<T: Element> Multidimensional<T> {
     }
 
     pub fn to_string(&self) -> String {
-        self.values.iter().map(|value|
-            value.iter()
-                .map(|elem| format!("{:?}", elem))
-                .collect::<Vec<String>>().join(", "))
-            .collect::<Vec<String>>().join("\n")
+        self.values
+            .iter()
+            .map(|value| {
+                value
+                    .iter()
+                    .map(|elem| format!("{:?}", elem))
+                    .collect::<Vec<String>>()
+                    .join(", ")
+            })
+            .collect::<Vec<String>>()
+            .join("\n")
     }
 
     pub fn iter(&self, variant: Variant) -> MultidimensionalIterator<T> {
@@ -119,10 +134,14 @@ impl<T: Element> Matrix for Multidimensional<T> {
     type Element = T;
 
     fn nonzeros(&self) -> usize {
-        self.values.iter().map(|value| {
-            value.iter().fold(0, |sum, &elem|
-                if elem.is_zero() { sum } else { sum + 1 })
-        }).sum()
+        self.values
+            .iter()
+            .map(|value| {
+                value
+                    .iter()
+                    .fold(0, |sum, &elem| if elem.is_zero() { sum } else { sum + 1 })
+            })
+            .sum()
     }
 
     #[inline]

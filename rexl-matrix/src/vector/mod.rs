@@ -1,11 +1,11 @@
-mod ops;
 mod iter;
+mod ops;
 
+use self::iter::{VectorIterator, VectorIteratorMut};
+use crate::{Element, NumericElement};
+use std::fmt::{Debug, Display, Formatter};
 use std::ops::*;
 use std::{cmp, fmt};
-use crate::{Element, NumericElement};
-use self::iter::{VectorIterator, VectorIteratorMut};
-use std::fmt::{Display, Formatter, Debug};
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct Vector<T: Element> {
@@ -19,7 +19,7 @@ impl<T: Element> From<Vec<T>> for Vector<T> {
     }
 }
 
-impl <T: Element> Into<Vec<T>> for Vector<T> {
+impl<T: Element> Into<Vec<T>> for Vector<T> {
     #[inline]
     fn into(self) -> Vec<T> {
         self.data
@@ -42,7 +42,7 @@ impl<T: Element> DerefMut for Vector<T> {
     }
 }
 
-impl <T: Element> Display for Vector<T> {
+impl<T: Element> Display for Vector<T> {
     #[inline]
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         self.data.fmt(f)
@@ -96,8 +96,9 @@ impl<T: Element> Vector<T> {
     }
 }
 
-impl<T: NumericElement + Add<Output=T> + Sub<Output=T> + Mul<Output=T> + Div<Output=T>> Vector<T> {
-
+impl<T: NumericElement + Add<Output = T> + Sub<Output = T> + Mul<Output = T> + Div<Output = T>>
+    Vector<T>
+{
     pub fn dot_mul(&self, other: &Self) -> T {
         let n = cmp::min(self.len(), other.len());
         let mut sum = T::zero();
@@ -125,8 +126,9 @@ impl<T: NumericElement + Add<Output=T> + Sub<Output=T> + Mul<Output=T> + Div<Out
     /// (sum(i - avg) ^ 2) / len
     pub fn variance(&self) -> T {
         let avg = self.average();
-        self.iter().fold(T::zero(), |sum, &elem|
-            sum + (elem - avg) * (elem - avg)) / T::from_usize(self.len())
+        self.iter()
+            .fold(T::zero(), |sum, &elem| sum + (elem - avg) * (elem - avg))
+            / T::from_usize(self.len())
     }
 
     /// static methods
@@ -145,7 +147,9 @@ impl<T: NumericElement + Add<Output=T> + Sub<Output=T> + Mul<Output=T> + Div<Out
         let mut y = Self::zero(size);
         y[index] = ai;
         for i in 0..size {
-            if i == index { continue; }
+            if i == index {
+                continue
+            }
             if i > index {
                 y[i] = ai + T::from_usize(i - index) * diff;
             } else {

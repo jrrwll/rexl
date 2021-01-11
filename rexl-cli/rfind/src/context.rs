@@ -1,11 +1,11 @@
-use std::collections::HashMap;
+use rexl::interpolate::brace_unwrap;
 use rexl::text::load_properties_from_str;
-use rexl::interpolate::{brace_unwrap};
+use std::collections::HashMap;
 
 #[derive(Debug)]
 pub struct Context {
     pub usage: &'static str,
-    message: HashMap<String, String>,
+    message:   HashMap<String, String>,
 }
 
 impl Context {

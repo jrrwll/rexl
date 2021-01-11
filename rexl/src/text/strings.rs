@@ -1,4 +1,3 @@
-
 /// only 0-9 is considered
 #[inline]
 pub fn is_number_char(c: char) -> bool {

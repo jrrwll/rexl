@@ -1,31 +1,30 @@
-pub use self::ops::*;
 pub use self::iter::*;
+pub use self::ops::*;
 
-mod ops;
 mod iter;
+mod ops;
 
-use crate::{Size, Element, Matrix};
-use std::{ptr, cmp};
+use crate::{Element, Matrix, Size};
+use std::{cmp, ptr};
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct Conventional<T: Element> {
     /// The number of rows.
-    pub rows: usize,
+    pub rows:    usize,
     /// The number of columns.
     pub columns: usize,
     /// The values stored in the column-major order.
-    pub values: Vec<T>,
+    pub values:  Vec<T>,
 }
 
 impl<T: Element> Conventional<T> {
-
     /// Create a zero matrix.
     pub fn new<S: Size>(size: S) -> Self {
         let (rows, columns) = size.dimensions();
         Conventional {
             rows,
             columns,
-            values: vec![T::zero(); columns * rows]
+            values: vec![T::zero(); columns * rows],
         }
     }
 
@@ -60,16 +59,16 @@ impl<T: Element> Conventional<T> {
             if old_columns > columns {
                 self.values.truncate((old_columns - columns) * rows);
             } else {
-                self.values.extend(vec![T::zero(); (columns - old_columns) * rows]);
+                self.values
+                    .extend(vec![T::zero(); (columns - old_columns) * rows]);
             }
-            return;
+            return
         }
 
         let mut matrix = Self::zero(size);
         let min_rows = cmp::min(old_rows, rows);
         let min_columns = cmp::min(old_columns, columns);
         for j in 0..min_columns {
-
             for i in 0..min_rows {
                 matrix[(i, j)] = self[(i, j)];
             }
@@ -82,8 +81,9 @@ impl<T: Element> Matrix for Conventional<T> {
     type Element = T;
 
     fn nonzeros(&self) -> usize {
-        self.values.iter().fold(0, |sum, &elem|
-            if elem.is_zero() { sum } else { sum + 1 })
+        self.values
+            .iter()
+            .fold(0, |sum, &elem| if elem.is_zero() { sum } else { sum + 1 })
     }
 
     fn zero<S: Size>(size: S) -> Self {

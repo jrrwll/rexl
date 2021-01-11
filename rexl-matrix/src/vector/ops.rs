@@ -1,6 +1,6 @@
-use std::ops::*;
-use std::cmp;
 use crate::{Element, Vector};
+use std::cmp;
+use std::ops::*;
 
 impl<T: Element> Index<usize> for Vector<T> {
     type Output = T;

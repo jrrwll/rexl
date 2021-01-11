@@ -1,6 +1,5 @@
 extern crate rexl_math;
 
-
 use rexl_math::numeric::function::*;
 
 #[test]

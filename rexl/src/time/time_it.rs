@@ -4,22 +4,28 @@ type FnBox = Box<dyn Fn() + 'static>;
 
 pub struct Timeit {
     /// multi metering
-    count: u32,
+    count:    u32,
     /// assert skip < count
     /// such as count=100, skip=10, then discard head 10 & tail 10 before merge
-    skip: u32,
+    skip:     u32,
     /// repeat times, one action avg time is `the result or run()` / repeat
     /// such as one action cost 1ms, if repeat=12 then total cost almost equal 12ms
-    repeat: u32,
+    repeat:   u32,
     /// use parallel io to execute
     parallel: bool,
     ///v
-    actions: Vec<FnBox>,
+    actions:  Vec<FnBox>,
 }
 
 impl Timeit {
     pub fn new() -> Self {
-        Timeit { count: 1, skip: 0, repeat: 1, parallel: false, actions: vec![] }
+        Timeit {
+            count:    1,
+            skip:     0,
+            repeat:   1,
+            parallel: false,
+            actions:  vec![],
+        }
     }
 
     pub fn count(&mut self, count: u32) -> &mut Self {
@@ -47,7 +53,9 @@ impl Timeit {
         self
     }
 
-    pub fn add_unary_action<T: 'static>(&mut self, supplier: fn() -> T, action: fn(T)) -> &mut Self {
+    pub fn add_unary_action<T: 'static>(
+        &mut self, supplier: fn() -> T, action: fn(T),
+    ) -> &mut Self {
         self.actions.push(Box::new(move || action(supplier())));
         self
     }
@@ -109,8 +117,10 @@ impl Timeit {
             for j in 0..count {
                 // if skip = 10, then
                 // skip 0, 1, ..., 9 or len-10, ..., len - 1
-                if j < skip || j >= count - skip { continue; }
-                c+=1;
+                if j < skip || j >= count - skip {
+                    continue
+                }
+                c += 1;
                 avg += tss[i][j];
             }
             stat[i] = avg / c;
@@ -118,8 +128,12 @@ impl Timeit {
         stat
     }
 
-    pub fn run_and_format(&self, unit: &'static str, unit_base: f64, delimiter: &'static str) -> String {
-        let ts: Vec<String> = self.run().iter()
+    pub fn run_and_format(
+        &self, unit: &'static str, unit_base: f64, delimiter: &'static str,
+    ) -> String {
+        let ts: Vec<String> = self
+            .run()
+            .iter()
             .map(|it| format!("{:?}{}", *it as f64 / unit_base, unit))
             .collect();
         ts.join(delimiter)
@@ -137,4 +151,3 @@ impl Timeit {
         self.run_and_format("us", 1000.0, delimiter)
     }
 }
-
