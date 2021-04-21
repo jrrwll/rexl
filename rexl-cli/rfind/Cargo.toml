@@ -8,4 +8,4 @@ edition = "2018"
 
 [dependencies]
 rexl = { path = "../../rexl", version = "0.0.3", default-features = false }
-regex = "1"
+regex = "1.4.5"

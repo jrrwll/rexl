@@ -10,6 +10,6 @@ documentation = "https://github.com/bobbystrange/rexl/blob/master/rexl/README.md
 readme = "README.md"
 homepage = "https://github.com/bobbystrange/rexl/tree/master/rexl"
 repository = "https://github.com/bobbystrange/rexl/tree/master/rexl"
-license = "MIT OR Apache-2.0"
+license = "Apache-2.0"
 keywords = ["algorithms", "expression", "argparser", "timeit", "interpolation"]
 categories = ["mathematics", "algorithms"]

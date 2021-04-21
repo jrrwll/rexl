@@ -1,4 +1,4 @@
-# A simple algorithm library for Rust
+# A common library for Rust
 
 ## argument parser
 ```rust
@@ -50,7 +50,7 @@ fn test_arg_parser() {
 }
 ```
 
-## interpolations for dollar and brace
+## interpolations for dollar $ and brace {}
 ```rust
 fn test_dollar() {
     let mut context = HashMap::new();
@@ -76,7 +76,7 @@ fn show(template: &str, context: &HashMap<String, String>, expect: &str) {
 }
 ```
 
-## time it
+## time it (just like `timeit` in Python)
 ```rust
 fn test_time_it() {
     let ts = Timeit::new()

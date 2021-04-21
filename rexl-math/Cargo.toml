@@ -10,7 +10,7 @@ documentation = "https://github.com/bobbystrange/rexl/blob/master/rexl-math/READ
 readme = "README.md"
 homepage = "https://github.com/bobbystrange/rexl/tree/master/rexl-math"
 repository = "https://github.com/bobbystrange/rexl/tree/master/rexl-math"
-license = "MIT OR Apache-2.0"
+license = "Apache-2.0"
 keywords = ["math"]
 categories = ["mathematics", "algorithms"]
 

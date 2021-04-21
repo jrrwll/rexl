@@ -121,9 +121,7 @@ pub trait NumericMatrix:
 
     fn det(&mut self) -> <Self as NumericMatrix>::Element {
         let sign_reversed = match self.diagonalize_triu() {
-            None => {
-                return <Self as NumericMatrix>::Element::zero()
-            }
+            None => return <Self as NumericMatrix>::Element::zero(),
             Some(sign_reversed) => sign_reversed,
         };
 
