@@ -49,6 +49,24 @@ fn test_dollar_named() {
     show_named(template, &context, "xxx");
 }
 
+#[test]
+fn test_dollar_utf8() {
+    let mut context = HashMap::new();
+    context.insert("English".to_string(), "".to_string());
+
+    let template = "English, 简体中文, 🤣😆😁";
+    let expect = "English, 简体中文, 🤣😆😁";
+    show_named(template, &context, expect);
+
+    let template = "$English, ${简体:中文}, ${\\🤣:😆:\\\\😁}";
+    let expect = ", 中文, 😆:\\😁";
+    show_named(template, &context, expect);
+
+    let template = "English, 简体中文, 🤣😆😁 $English, ${简体:中文}, ${\\🤣:😆:\\\\😁}";
+    let expect = "English, 简体中文, 🤣😆😁 , 中文, 😆:\\😁";
+    show_named(template, &context, expect);
+}
+
 fn show_named(template: &str, context: &HashMap<String, String>, expect: &str) {
     println!("{}", template);
     match dollar_named(template, context, Some("NULL")) {

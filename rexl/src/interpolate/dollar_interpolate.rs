@@ -19,25 +19,28 @@ pub fn dollar(
     let mut enter_dollar_brace = false; // in case like ${...}
     let mut left_index = 0;
     let mut colon_index = 0; // the index of char `:`
-    let mut k: isize = -1;
+    let mut chars = s.char_indices();
+    let mut previous: Option<(usize, char)> = None;
     loop {
-        k += 1;
-        let mut i = k as usize;
-        if i >= size {
+        let c;
+        let i;
+        if let Some((ind, chr)) = previous {
+            c = chr;
+            i = ind;
+            previous = None;
+        } else if let Some((ind, chr)) = chars.next() {
+            c = chr;
+            i = ind;
+        } else {
             break
         }
-        let c = s
-            .get(i..(i + 1))
-            .ok_or(unexpected_err(s, i, "s.get(i..(i+1))"))?
-            .chars()
-            .next()
-            .ok_or(unexpected_err(s, i, "chars().next()"))?;
+
         if enter_dollar_brace {
             if c == '\\' {
                 if i == size - 1 {
                     return Err(invalid_char_err(c, i))
                 }
-                k += 1;
+                chars.next(); // treat the next char as a normal char
                 continue
             }
             if c == ':' && colon_index == 0 {
@@ -49,7 +52,9 @@ pub fn dollar(
             }
             // extract xxx from ${xxx}
             let right_index = if colon_index != 0 { colon_index } else { i };
-            let variable = s.get(left_index..right_index).unwrap();
+            let variable = s
+                .get(left_index..right_index)
+                .ok_or_else(|| invalid_string_err(left_index, right_index))?;
             // remove escape character
             let variable = from_backslash(variable);
             if let Some(value) = named.get(&variable) {
@@ -60,7 +65,9 @@ pub fn dollar(
                     add_default_value(&mut result, default_value, variable)?;
                 } else {
                     // extract ### from ${@@@:###}
-                    let value = s.get((colon_index + 1)..i).unwrap();
+                    let value = s
+                        .get((colon_index + 1)..i)
+                        .ok_or_else(|| invalid_string_err(colon_index + 1, i))?;
                     let value = from_backslash(value);
                     result.push_str(&value);
                 }
@@ -73,13 +80,16 @@ pub fn dollar(
             if is_variable_char(c) {
                 continue
             }
-            let variable = s.get(left_index..i).unwrap();
+            let variable = s
+                .get(left_index..i)
+                .ok_or_else(|| invalid_string_err(left_index, i))?;
             if let Some(value) = named.get(variable) {
                 result.push_str(value);
             } else {
                 add_default_value(&mut result, default_value, variable.to_string())?;
             }
-            k -= 1;
+
+            previous = Some((i - 1, c));
             enter_dollar = false;
             continue
         }
@@ -87,7 +97,9 @@ pub fn dollar(
             if is_number_char(c) {
                 continue
             }
-            let variable = s.get(left_index..i).unwrap();
+            let variable = s
+                .get(left_index..i)
+                .ok_or_else(|| invalid_string_err(left_index, i))?;
             let mut n = variable.parse::<usize>().map_err(|e| {
                 InterpolationError::NumberParse(NumberParseValue {
                     offset: left_index,
@@ -101,7 +113,7 @@ pub fn dollar(
             } else {
                 add_default_value_positional(&mut result, default_value, n)?;
             }
-            k -= 1;
+            previous = Some((i - 1, c));
             enter_positional = false;
             continue
         }
@@ -111,9 +123,7 @@ pub fn dollar(
         }
         // escape char
         if c == '\\' {
-            k += 1;
-            i = k as usize;
-            let next = s.get(i..(i + 1)).unwrap().chars().next().unwrap();
+            let (_, next) = chars.next().ok_or_else(|| invalid_char_err(c, i + 1))?;
             result.push(next);
             continue
         }
@@ -122,9 +132,7 @@ pub fn dollar(
             continue
         }
         // then c is $
-        k += 1;
-        i = k as usize;
-        let next = s.get(i..(i + 1)).unwrap().chars().next().unwrap();
+        let (i, next) = chars.next().ok_or_else(|| invalid_char_err(c, i + 1))?;
         if is_number_char(next) {
             left_index = i;
             enter_positional = true;
@@ -158,6 +166,14 @@ pub fn dollar_positional(
     dollar(s, &HashMap::new(), positional, default_value)
 }
 
-pub fn dollar_unwrap(s: &str, positional: Vec<String>) -> String {
-    dollar_positional(s, &positional, None).unwrap()
+pub fn dollar_named_unwrap(
+    s: &str, named: &HashMap<String, String>, default_value: Option<&str>,
+) -> String {
+    dollar_named(s, &named, default_value).unwrap()
+}
+
+pub fn dollar_positional_unwrap(
+    s: &str, positional: Vec<String>, default_value: Option<&str>,
+) -> String {
+    dollar_positional(s, &positional, default_value).unwrap()
 }

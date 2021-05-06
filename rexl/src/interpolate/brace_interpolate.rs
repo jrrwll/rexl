@@ -16,26 +16,24 @@ pub fn brace(
     let mut enter_positional = false; // in case like {1}
     let mut left_index = 0;
     let mut colon_index = 0; // the index of char `:`
-    let mut k = -1;
     let mut default_index = 0;
+    let mut chars = s.char_indices();
     loop {
-        k += 1;
-        let mut i = k as usize;
-        if i >= size {
+        let c;
+        let i;
+        if let Some((ind, chr)) = chars.next() {
+            c = chr;
+            i = ind;
+        } else {
             break
         }
-        let c = s
-            .get(i..(i + 1))
-            .ok_or(unexpected_err(s, i, "s.get(i..(i+1))"))?
-            .chars()
-            .next()
-            .ok_or(unexpected_err(s, i, "chars().next()"))?;
+
         if enter_brace {
             if c == '\\' {
                 if i == size - 1 {
                     return Err(invalid_char_err(c, i))
                 }
-                k += 1;
+                chars.next(); // treat the next char as a normal char
                 continue
             }
             if c == ':' && colon_index == 0 {
@@ -47,7 +45,9 @@ pub fn brace(
             }
             // extract xxx from ${xxx}
             let right_index = if colon_index != 0 { colon_index } else { i };
-            let variable = s.get(left_index..right_index).unwrap();
+            let variable = s
+                .get(left_index..right_index)
+                .ok_or_else(|| invalid_string_err(left_index, right_index))?;
             // remove escape character
             let variable = from_backslash(variable);
             if let Some(value) = named.get(&variable) {
@@ -58,7 +58,9 @@ pub fn brace(
                     add_default_value(&mut result, default_value, variable)?;
                 } else {
                     // extract ### from ${@@@:###}
-                    let value = s.get((colon_index + 1)..i).unwrap();
+                    let value = s
+                        .get((colon_index + 1)..i)
+                        .ok_or_else(|| invalid_string_err(colon_index + 1, i))?;
                     let value = from_backslash(value);
                     result.push_str(&value);
                 }
@@ -74,7 +76,9 @@ pub fn brace(
             if c != '}' {
                 return Err(invalid_char_err(c, i))
             }
-            let variable = s.get(left_index..i).unwrap();
+            let variable = s
+                .get(left_index..i)
+                .ok_or_else(|| invalid_string_err(left_index, i))?;
             let n = variable
                 .parse::<usize>()
                 .map_err(|e| number_parse_err(left_index, variable.to_string(), e.to_string()))?;
@@ -92,9 +96,7 @@ pub fn brace(
         }
         // escape char
         if c == '\\' {
-            k += 1;
-            i = k as usize;
-            let next = s.get(i..(i + 1)).unwrap().chars().next().unwrap();
+            let (_, next) = chars.next().ok_or_else(|| invalid_char_err(c, i + 1))?;
             result.push(next);
             continue
         }
@@ -103,9 +105,7 @@ pub fn brace(
             continue
         }
         // then c is {
-        k += 1;
-        i = k as usize;
-        let next = s.get(i..(i + 1)).unwrap().chars().next().unwrap();
+        let (i, next) = chars.next().ok_or_else(|| invalid_char_err(c, i + 1))?;
         if next == '}' {
             if let Some(argument) = positional.get(default_index) {
                 result.push_str(argument);
@@ -142,6 +142,14 @@ pub fn brace_positional(
     brace(s, &HashMap::new(), positional, default_value)
 }
 
-pub fn brace_unwrap(s: &str, positional: Vec<String>) -> String {
-    brace_positional(s, &positional, None).unwrap()
+pub fn brace_named_unwrap(
+    s: &str, named: &HashMap<String, String>, default_value: Option<&str>,
+) -> String {
+    brace_named(s, named, default_value).unwrap()
+}
+
+pub fn brace_positional_unwrap(
+    s: &str, positional: &Vec<String>, default_value: Option<&str>,
+) -> String {
+    brace_positional(s, positional, default_value).unwrap()
 }

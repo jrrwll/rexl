@@ -7,10 +7,10 @@ mod dollar_interpolate;
 #[derive(Debug, PartialEq, Clone)]
 pub enum InterpolationError {
     InvalidChar(InvalidCharValue),
+    InvalidString(InvalidStringValue),
     MissingVariable(String),
     MissingPositionalVariable(usize),
     NumberParse(NumberParseValue),
-    Unexpected(UnexpectedValue),
 }
 
 #[derive(Debug, PartialEq, Clone)]
@@ -20,17 +20,16 @@ pub struct InvalidCharValue {
 }
 
 #[derive(Debug, PartialEq, Clone)]
+pub struct InvalidStringValue {
+    pub start: usize,
+    pub end:   usize,
+}
+
+#[derive(Debug, PartialEq, Clone)]
 pub struct NumberParseValue {
     pub offset: usize,
     pub source: String,
     pub error:  String,
-}
-
-#[derive(Debug, PartialEq, Clone)]
-pub struct UnexpectedValue {
-    pub template: String,
-    pub offset:   usize,
-    pub code:     String,
 }
 
 /// private functions
@@ -40,23 +39,16 @@ fn invalid_char_err(found: char, offset: usize) -> InterpolationError {
 }
 
 #[inline]
+fn invalid_string_err(start: usize, end: usize) -> InterpolationError {
+    InterpolationError::InvalidString(InvalidStringValue { start, end })
+}
+
+#[inline]
 fn number_parse_err(offset: usize, source: String, error: String) -> InterpolationError {
     InterpolationError::NumberParse(NumberParseValue {
         offset,
         source,
         error,
-    })
-}
-
-#[inline]
-fn unexpected_err<S1, S2>(s: S1, offset: usize, code: S2) -> InterpolationError
-where
-    S1: ToString,
-    S2: ToString, {
-    InterpolationError::Unexpected(UnexpectedValue {
-        template: s.to_string(),
-        offset,
-        code: code.to_string(),
     })
 }
 

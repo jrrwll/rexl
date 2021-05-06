@@ -1,4 +1,4 @@
-use rexl::interpolate::brace_unwrap;
+use rexl::interpolate::brace_positional_unwrap;
 use rexl::text::load_properties_from_str;
 use std::collections::HashMap;
 
@@ -17,6 +17,6 @@ impl Context {
     }
 
     pub fn format(&self, key: &'static str, args: Vec<String>) -> String {
-        brace_unwrap(&self.message[key], args)
+        brace_positional_unwrap(&self.message[key], &args, None)
     }
 }

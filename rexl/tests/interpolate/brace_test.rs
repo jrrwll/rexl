@@ -1,4 +1,4 @@
-use rexl::interpolate::{brace_named, brace_positional};
+use rexl::interpolate::{brace_named, brace_positional, brace_unwrap};
 use std::collections::HashMap;
 
 #[test]
@@ -52,6 +52,12 @@ fn test_brace_named() {
         &context,
         " a_val a_Y_0_val _b_Z_val {NULL} NULL } } NULL NULL NULL",
     );
+}
+
+#[test]
+fn test_brace_unwrap_utf8() {
+    let s = brace_unwrap("English, 简体中文, 🤣😆😁", &Vec::new());
+    println!("{}", s)
 }
 
 fn show_named(template: &str, context: &HashMap<String, String>, expect: &str) {
