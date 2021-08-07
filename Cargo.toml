@@ -1,5 +1,9 @@
 [workspace]
 members = [
+    #learn
+    "learn/book",
+    "learn/macro",
+    "learn/daily",
     # lib
     "rexl",
     "rexl-math",
