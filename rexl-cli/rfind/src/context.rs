@@ -5,7 +5,7 @@ use std::collections::HashMap;
 #[derive(Debug)]
 pub struct Context {
     pub usage: &'static str,
-    message:   HashMap<String, String>,
+    message: HashMap<String, String>,
 }
 
 impl Context {

@@ -13,10 +13,10 @@ pub fn load_properties<P: AsRef<Path>>(path: P) -> Result<HashMap<String, String
         let bytes_read = reader.read_line(&mut line)?;
         // EOF
         if bytes_read == 0 {
-            break
+            break;
         }
         if line.is_empty() || line.starts_with('#') || line.starts_with('=') {
-            continue
+            continue;
         }
         load_properties_per_line(&line, &mut properties);
         // do not accumulate data
@@ -35,7 +35,7 @@ pub fn load_properties_from_vec(lines: &Vec<String>) -> HashMap<String, String> 
     let mut properties = HashMap::new();
     for line in lines.iter() {
         if line.is_empty() || line.starts_with('#') {
-            continue
+            continue;
         }
         load_properties_per_line(&line, &mut properties);
     }

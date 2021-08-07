@@ -7,21 +7,21 @@ use std::path::Path;
 
 #[derive(Debug)]
 pub struct Main<'a> {
-    pub context:         &'a Context,
-    pub verbose:         bool,
+    pub context: &'a Context,
+    pub verbose: bool,
     // filter
-    pub depth:           usize,
+    pub depth: usize,
     // bits: 1file,2dir,3link
-    pub kind:            u8,
-    pub name:            Vec<String>,
-    pub name_pattern:    Vec<Regex>,
-    pub size:            Vec<(SizeOption, u64)>,
+    pub kind: u8,
+    pub name: Vec<String>,
+    pub name_pattern: Vec<Regex>,
+    pub size: Vec<(SizeOption, u64)>,
     // pub access_time: Vec<TimeOption>,
     // pub modify_time: Vec<TimeOption>,
     // pub change_time: Vec<TimeOption>,
-    pub content:         Vec<String>,
+    pub content: Vec<String>,
     pub content_pattern: Vec<Regex>,
-    pub path:            Vec<String>,
+    pub path: Vec<String>,
 }
 
 impl<'a> Main<'a> {
@@ -32,7 +32,7 @@ impl<'a> Main<'a> {
                 Ok(_) => {}
                 Err(err) => {
                     eprintln!("error: {}", err);
-                    return
+                    return;
                 }
             }
         }
@@ -46,7 +46,7 @@ impl<'a> Main<'a> {
                 if self.verbose {
                     println!("skipping file by type filtering {:?}", path)
                 }
-                return Ok(())
+                return Ok(());
             }
 
             let file_size = meta.len();
@@ -64,7 +64,7 @@ impl<'a> Main<'a> {
                 for (so, size) in self.size.iter() {
                     if so.matched(*size, file_size) {
                         matched = true;
-                        break
+                        break;
                     }
                 }
                 if !matched {
@@ -74,7 +74,7 @@ impl<'a> Main<'a> {
                             file_size, path
                         )
                     }
-                    return Ok(())
+                    return Ok(());
                 }
             }
             // name
@@ -83,14 +83,14 @@ impl<'a> Main<'a> {
                 for name in self.name.iter() {
                     if file_name.contains(name) {
                         matched = true;
-                        break
+                        break;
                     }
                 }
                 if !matched {
                     if self.verbose {
                         println!("skipping file by name filtering {:?}", path)
                     }
-                    return Ok(())
+                    return Ok(());
                 }
             }
             // name_pattern
@@ -99,14 +99,14 @@ impl<'a> Main<'a> {
                 for name_pattern in self.name_pattern.iter() {
                     if name_pattern.find(file_name).is_some() {
                         matched = true;
-                        break
+                        break;
                     }
                 }
                 if !matched {
                     if self.verbose {
                         println!("skipping file by name-pattern filtering {:?}", path)
                     }
-                    return Ok(())
+                    return Ok(());
                 }
             }
 
@@ -117,11 +117,11 @@ impl<'a> Main<'a> {
                 if self.verbose {
                     println!("skipping dir by type filtering {:?}", path)
                 }
-                return Ok(())
+                return Ok(());
             }
             // depth
             if depth <= 1 {
-                return Ok(())
+                return Ok(());
             }
 
             self.search_dir(path, depth - 1)?;
@@ -135,7 +135,7 @@ impl<'a> Main<'a> {
 
         if self.content.is_empty() && self.content_pattern.is_empty() {
             println!("found: {:?}", path);
-            return Ok(())
+            return Ok(());
         }
 
         let mut matched = false;
@@ -147,7 +147,7 @@ impl<'a> Main<'a> {
                         for content in self.content.iter() {
                             if line.contains(content) {
                                 matched = true;
-                                break
+                                break;
                             }
                         }
                     }
@@ -160,7 +160,7 @@ impl<'a> Main<'a> {
                             err.to_string()
                         );
                     }
-                    return Ok(())
+                    return Ok(());
                 }
             }
         }
@@ -168,7 +168,7 @@ impl<'a> Main<'a> {
             if self.verbose {
                 println!("skipping file by content filtering {:?}", path)
             }
-            return Ok(())
+            return Ok(());
         }
         println!("found: {:?}", path);
         Ok(())

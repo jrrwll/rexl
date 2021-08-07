@@ -6,4 +6,5 @@ members = [
     "rexl-matrix",
     # bin
     "rexl-cli/rfind",
+    "rexl-cli/rserve"
 ]

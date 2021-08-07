@@ -10,11 +10,11 @@ use std::{cmp, ptr};
 #[derive(Clone, Debug, PartialEq)]
 pub struct Conventional<T: Element> {
     /// The number of rows.
-    pub rows:    usize,
+    pub rows: usize,
     /// The number of columns.
     pub columns: usize,
     /// The values stored in the column-major order.
-    pub values:  Vec<T>,
+    pub values: Vec<T>,
 }
 
 impl<T: Element> Conventional<T> {
@@ -62,7 +62,7 @@ impl<T: Element> Conventional<T> {
                 self.values
                     .extend(vec![T::zero(); (columns - old_columns) * rows]);
             }
-            return
+            return;
         }
 
         let mut matrix = Self::zero(size);

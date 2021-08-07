@@ -22,7 +22,8 @@ pub trait ElementaryTransformation<T: Element> {
 macro_rules! implement_elementary_transformation {
     ($name:ident) => {
         impl<T> ElementaryTransformation<T> for $name<T>
-        where T: Element + Add<Output = T> + Mul<Output = T>
+        where
+            T: Element + Add<Output = T> + Mul<Output = T>,
         {
             fn multiply_row(&mut self, dest: usize, multiply: T) {
                 for j in 0..self.columns {

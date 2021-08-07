@@ -1,0 +1,19 @@
+#cargo-features = ["strip"]
+
+[package]
+name = "rserve"
+version = "0.1.0"
+authors = ["tuke <jrriwll@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+#[profile.release]
+#panic = 'abort' # removes the need for this extra unwinding code
+#opt-level = 'z'  # Optimize for size. Default is 3 for speed
+#lto = true # Enable Link Time Optimization
+#strip = true  # Automatically strip symbols from the binary.
+
+[dependencies]
+rexl = { path = "../../rexl", version = "0.0.3", default-features = false }
+actix-web = "3"

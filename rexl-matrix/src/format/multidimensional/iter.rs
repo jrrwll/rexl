@@ -3,21 +3,21 @@ use crate::{Element, Variant};
 use std::mem;
 
 pub struct MultidimensionalIterator<'a, T: 'a + Element> {
-    pub matrix:        &'a Multidimensional<T>,
+    pub matrix: &'a Multidimensional<T>,
     pub column_offset: usize,
-    pub row_offset:    usize,
-    pub column_size:   usize,
-    pub row_size:      usize,
-    pub variant:       Variant,
+    pub row_offset: usize,
+    pub column_size: usize,
+    pub row_size: usize,
+    pub variant: Variant,
 }
 
 pub struct MultidimensionalIteratorMut<'a, T: 'a + Element> {
-    pub matrix:        &'a mut Multidimensional<T>,
+    pub matrix: &'a mut Multidimensional<T>,
     pub column_offset: usize,
-    pub row_offset:    usize,
-    pub column_size:   usize,
-    pub row_size:      usize,
-    pub variant:       Variant,
+    pub row_offset: usize,
+    pub column_size: usize,
+    pub row_size: usize,
+    pub variant: Variant,
 }
 
 impl<'a, T: Element> Iterator for MultidimensionalIterator<'a, T> {
@@ -34,7 +34,7 @@ impl<'a, T: Element> Iterator for MultidimensionalIterator<'a, T> {
         let rows = *row_offset;
         let columns = *column_offset;
         if rows == self.row_size || columns == self.column_size {
-            return None
+            return None;
         }
 
         let item = unsafe { mem::transmute(&matrix.values[columns][rows]) };
@@ -74,7 +74,7 @@ impl<'a, T: Element> Iterator for MultidimensionalIteratorMut<'a, T> {
         let rows = *row_offset;
         let columns = *column_offset;
         if rows == self.row_size || columns == self.column_size {
-            return None
+            return None;
         }
 
         let item = unsafe { mem::transmute(&mut matrix.values[columns][rows]) };
