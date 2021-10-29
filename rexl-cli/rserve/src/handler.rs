@@ -1,84 +1,78 @@
+use crate::assets::{format_html, format_li};
 use actix_web::body::Body;
 use actix_web::web::Bytes;
 use actix_web::{HttpRequest, HttpResponse, Responder};
+use rexl::io::{abs_path, base_name, ext_name};
 use rexl::mime::mime_from_filename;
 use std::fs::{metadata, read_dir, File};
 use std::io::Read;
 
 pub async fn index(req: HttpRequest) -> impl Responder {
-    let url_path = req.path();
-    println!("access: {}", url_path);
-
-    let file_path = format!(".{}", url_path);
-    let meta = match metadata(&file_path) {
-        Err(v) => {
-            return index_error(v.to_string());
-        }
+    match index_at(req.path()) {
+        Err(v) => index_error(v),
         Ok(v) => v,
-    };
+    }
+}
+
+pub fn index_at(url_path: &str) -> Result<HttpResponse, String> {
+    let current_dir = abs_path(".")?;
+    let file_path = format!("{}{}", &current_dir, url_path);
+    println!("access {} via {}", file_path, url_path);
+
+    let meta = metadata(&file_path).map_err(|err| err.to_string())?;
 
     if meta.is_file() {
         index_file(&file_path, meta.len() as usize)
     } else if meta.is_dir() {
-        index_dir(&file_path)
+        index_dir(&file_path, url_path)
     } else {
-        index_error(format!("unsupported file type {}", &file_path))
+        Err(format!("unsupported file type {}", &file_path))
     }
 }
 
-fn index_file(p: &str, file_len: usize) -> HttpResponse {
-    let mut file = match File::open(p).map_err(|err| err.to_string()) {
-        Err(v) => return index_error(v),
-        Ok(v) => v,
-    };
-
+fn index_file(p: &str, file_len: usize) -> Result<HttpResponse, String> {
+    let mut file = File::open(p).map_err(|err| err.to_string())?;
     let mut buf = Vec::with_capacity(file_len);
-    match file.read_to_end(&mut buf) {
-        Err(v) => return index_error(v.to_string()),
-        Ok(_) => {
-            let mut resp = HttpResponse::Ok();
-            if let Some(mime) = mime_from_filename(p) {
-                resp.header("Content-Type", mime);
-            }
-            resp.body(Body::Bytes(Bytes::from(buf)))
-        }
+    file.read_to_end(&mut buf).map_err(|err| err.to_string())?;
+
+    let mut resp = HttpResponse::Ok();
+    if let Some(mime) = mime_from_filename(p) {
+        resp.header("Content-Type", mime);
     }
+    Ok(resp.body(Body::Bytes(Bytes::from(buf))))
 }
 
-fn index_dir(file_path: &str) -> HttpResponse {
-    let mut lines = vec![format!("<h1>Index of {}</h1>", file_path,)];
-    let rd = match read_dir(file_path).map_err(|err| err.to_string()) {
-        Err(v) => return index_error(v),
-        Ok(v) => v,
-    };
-    let mut c = 0;
+fn index_dir(file_path: &str, url_path: &str) -> Result<HttpResponse, String> {
+    let mut lis = vec![];
+    let rd = read_dir(file_path).map_err(|err| err.to_string())?;
     for r in rd {
-        let entry = match r.map_err(|err| err.to_string()) {
-            Err(v) => return index_error(v),
-            Ok(v) => v,
+        let entry = r.map_err(|err| err.to_string())?;
+        let filename = entry.file_name().into_string().map_err(|err| {
+            format!(
+                "error occurred on {}/{}!",
+                file_path,
+                err.to_string_lossy().to_string()
+            )
+        })?;
+
+        let ft = entry.file_type().map_err(|err| err.to_string())?;
+        let clazz = if ft.is_file() {
+            format!("file {}", ext_name(&filename))
+        } else {
+            "folder".to_owned()
         };
-        let line = match entry
-            .path()
-            .to_str()
-            .ok_or_else(|| format!("fail to read dir entry on dir {}", file_path))
-        {
-            Err(v) => return index_error(v),
-            Ok(v) => v,
-        }
-        .to_string();
 
-        let prefix = if c == 0 { "<ul>\n" } else { "" };
-
-        let url_path = &line[1..];
-        let filename = &line[(line.rfind('/').unwrap_or(0) + 1)..];
-        lines.push(format!(
-            "{}<li><a href='{}'>{}</a></li>",
-            prefix, url_path, filename
-        ));
-        c += 1;
+        let path = if url_path.ends_with("/") {
+            format!("{}{}", url_path, &filename)
+        } else {
+            format!("{}/{}", url_path, &filename)
+        };
+        lis.push(format_li(&filename, &path, &clazz));
     }
-    lines.push("</ul>\n".to_string());
-    HttpResponse::Ok().body(lines.join("\n"))
+
+    let title = base_name(file_path);
+    let html = format_html(title, url_path, &lis.join("\n"));
+    Ok(HttpResponse::Ok().body(html))
 }
 
 fn index_error(err: String) -> HttpResponse {

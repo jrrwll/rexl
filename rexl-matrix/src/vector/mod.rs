@@ -148,7 +148,7 @@ impl<T: NumericElement + Add<Output = T> + Sub<Output = T> + Mul<Output = T> + D
         y[index] = ai;
         for i in 0..size {
             if i == index {
-                continue;
+                continue
             }
             if i > index {
                 y[i] = ai + T::from_usize(i - index) * diff;

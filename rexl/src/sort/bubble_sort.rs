@@ -2,9 +2,7 @@ use std::cmp::PartialOrd;
 use std::marker::Sized;
 
 pub fn bubble_sort<E>(arr: &mut [E])
-where
-    E: PartialOrd + Sized,
-{
+where E: PartialOrd + Sized {
     let len = arr.len();
     let mut i = 0;
     while i < len {
@@ -19,7 +17,7 @@ where
         }
 
         if swapped_count == 0 {
-            break;
+            break
         }
         i = i + 1;
     }

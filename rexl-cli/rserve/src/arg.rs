@@ -4,7 +4,7 @@ use std::process;
 #[derive(Debug)]
 pub struct Config {
     pub bind_address: String,
-    pub base_path: String,
+    pub base_path:    String,
 }
 
 #[derive(Debug, PartialEq, Eq, Clone, Copy, Hash)]

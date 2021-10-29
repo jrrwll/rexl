@@ -1,4 +1,5 @@
 mod arg;
+mod assets;
 mod handler;
 
 use crate::arg::Config;

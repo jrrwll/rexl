@@ -15,21 +15,21 @@ pub enum InterpolationError {
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct InvalidCharValue {
-    pub found: char,
+    pub found:  char,
     pub offset: usize,
 }
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct InvalidStringValue {
     pub start: usize,
-    pub end: usize,
+    pub end:   usize,
 }
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct NumberParseValue {
     pub offset: usize,
     pub source: String,
-    pub error: String,
+    pub error:  String,
 }
 
 /// private functions

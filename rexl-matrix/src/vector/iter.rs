@@ -3,14 +3,14 @@ use std::mem;
 
 pub struct VectorIterator<'a, T: 'a + Element> {
     pub vector: &'a Vector<T>,
-    pub taken: usize,
-    pub size: usize,
+    pub taken:  usize,
+    pub size:   usize,
 }
 
 pub struct VectorIteratorMut<'a, T: 'a + Element> {
     pub vector: &'a mut Vector<T>,
-    pub taken: usize,
-    pub size: usize,
+    pub taken:  usize,
+    pub size:   usize,
 }
 
 impl<'a, T: Element> Iterator for VectorIterator<'a, T> {
@@ -25,7 +25,7 @@ impl<'a, T: Element> Iterator for VectorIterator<'a, T> {
 
         let k = *taken;
         if k == self.size {
-            return None;
+            return None
         }
         *taken += 1;
         let item = unsafe { mem::transmute(&vector.data[k]) };
@@ -45,7 +45,7 @@ impl<'a, T: Element> Iterator for VectorIteratorMut<'a, T> {
 
         let k = *taken;
         if k == self.size {
-            return None;
+            return None
         }
         *taken += 1;
         let item = unsafe { mem::transmute(&mut vector.data[k]) };

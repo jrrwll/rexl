@@ -1,15 +1,15 @@
 [package]
 name = "rexl"
-version = "0.0.3"
-authors = ["tuke <bobby.j.strange@gmail.com>"]
-edition = "2018"
+version = "0.0.4"
+authors = ["tuke <jrriwll@gmail.com>"]
+edition = "2021"
 description = """
-A simple algorithm library for Rust
+Common Library for Rust
 """
 documentation = "https://github.com/bobbystrange/rexl/blob/master/rexl/README.md"
 readme = "README.md"
 homepage = "https://github.com/bobbystrange/rexl/tree/master/rexl"
 repository = "https://github.com/bobbystrange/rexl/tree/master/rexl"
 license = "Apache-2.0"
-keywords = ["algorithms", "expression", "argparser", "timeit", "interpolation"]
-categories = ["mathematics", "algorithms"]
+keywords = ["argparser", "timeit", "interpolation"]
+categories = ["algorithms"]

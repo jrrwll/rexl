@@ -24,7 +24,7 @@ impl<K: Hash + Eq + Debug + Clone> ArgParser<K> {
         }
         if shift.is_empty() {
             // no any args is passed
-            return Err(ArgParserError::NoArgs);
+            return Err(ArgParserError::NoArgs)
         }
 
         self._init_name_key_map();
@@ -72,7 +72,7 @@ impl<K: Hash + Eq + Debug + Clone> ArgParser<K> {
     fn _get_key(&self, name: &str) -> Result<(K, Argument<K>), ArgParserError<K>> {
         if let Some(key) = self.names_key_map.get(name) {
             if let Some(argument) = self.key_argument_map.get(key) {
-                return Ok((key.clone(), argument.clone()));
+                return Ok((key.clone(), argument.clone()))
             }
         }
         Err(ArgParserError::UnexpectedArg(name.to_string()))
@@ -96,14 +96,14 @@ impl<K: Hash + Eq + Debug + Clone> ArgParser<K> {
         // treat argument behind `--` as extra values
         if arg_name_len == 2 {
             self._add_values(shift);
-            return Ok(());
+            return Ok(())
         }
         // extract 'xxx' from '--xxx'
         let new_arg_name = &arg_name[2..arg_name_len];
         // the case, not `--rm=true` but `--type pom`
         if !new_arg_name.contains("=") {
             let (key, argument) = self._get_key(new_arg_name)?;
-            return self._add_all_forward(key, argument, shift);
+            return self._add_all_forward(key, argument, shift)
         }
         // the case, not `--type pom` but `--rm=true`
         let ind = new_arg_name.find("=").unwrap();
@@ -114,7 +114,7 @@ impl<K: Hash + Eq + Debug + Clone> ArgParser<K> {
         if ind == new_arg_name.len() - 1 {
             argument.check_kind(ArgumentKind::Bool)?;
             self.bool_map.insert(key, true);
-            return Ok(());
+            return Ok(())
         }
         // the case `--rm=true`
         let value = &new_arg_name[(ind + 1)..];
@@ -128,7 +128,7 @@ impl<K: Hash + Eq + Debug + Clone> ArgParser<K> {
         // only a `-`
         if arg_name_len == 1 {
             self.extra_values.push(arg_name.to_string());
-            return Ok(());
+            return Ok(())
         }
         // extract 'xxx' from '-xxx'
         let new_arg_name = &arg_name[1..arg_name_len];
@@ -136,13 +136,13 @@ impl<K: Hash + Eq + Debug + Clone> ArgParser<K> {
         let (key, argument) = self._get_key(name)?;
         // the case `-o yaml`
         if new_arg_name.len() == 1 {
-            return self._add_all_forward(key, argument, shift);
+            return self._add_all_forward(key, argument, shift)
         }
         // the case `-P3306 -f=%h-%m-%s, -Dlogger.level=debug`
         let value = &new_arg_name[1..];
         // the case `-P3306`
         if !new_arg_name.contains("=") {
-            return self._add_all(key, argument, value.to_string());
+            return self._add_all(key, argument, value.to_string())
         }
         // the case `-f=%h-%m-%s`
         let mut ind = new_arg_name.find("=").unwrap();
@@ -151,10 +151,10 @@ impl<K: Hash + Eq + Debug + Clone> ArgParser<K> {
             if value.len() == 1 {
                 argument.check_kind(ArgumentKind::Bool)?;
                 self.bool_map.insert(key, true);
-                return Ok(());
+                return Ok(())
             }
             let value = &value[1..];
-            return self._add_all(key, argument, value.to_string());
+            return self._add_all(key, argument, value.to_string())
         }
         // the case, `-Dlogger.level=debug`
         argument.check_kind(ArgumentKind::Property)?;
@@ -168,7 +168,7 @@ impl<K: Hash + Eq + Debug + Clone> ArgParser<K> {
         }
         .to_string();
         self._add_property(key, hkey.to_string(), hval);
-        return Ok(());
+        return Ok(())
     }
 
     fn _add_values(&mut self, shift: &mut LinkedList<String>) {
@@ -211,7 +211,7 @@ impl<K: Hash + Eq + Debug + Clone> ArgParser<K> {
             }
             ArgumentKind::String => {
                 if shift.is_empty() {
-                    return Err(ArgParserError::MissingValue(argument));
+                    return Err(ArgParserError::MissingValue(argument))
                 }
                 if !argument.multiple {
                     // unwrap since we check `shift` is not empty
@@ -221,7 +221,7 @@ impl<K: Hash + Eq + Debug + Clone> ArgParser<K> {
                         // reach another argument, then go back
                         if value.starts_with("-") {
                             shift.push_back(value);
-                            return Ok(());
+                            return Ok(())
                         }
                         // clone key in a loop
                         self._add_string_list(key.clone(), value);
@@ -230,7 +230,7 @@ impl<K: Hash + Eq + Debug + Clone> ArgParser<K> {
             }
             ArgumentKind::Integer => {
                 if shift.is_empty() {
-                    return Err(ArgParserError::MissingValue(argument));
+                    return Err(ArgParserError::MissingValue(argument))
                 }
                 if !argument.multiple {
                     // unwrap since we check `shift` is not empty
@@ -241,7 +241,7 @@ impl<K: Hash + Eq + Debug + Clone> ArgParser<K> {
                         // reach another argument, then go back
                         if value.starts_with("-") {
                             shift.push_back(value);
-                            return Ok(());
+                            return Ok(())
                         }
 
                         let value = argument.parse_i64(value)?;
@@ -251,7 +251,7 @@ impl<K: Hash + Eq + Debug + Clone> ArgParser<K> {
             }
             ArgumentKind::Float => {
                 if shift.is_empty() {
-                    return Err(ArgParserError::MissingValue(argument.clone()));
+                    return Err(ArgParserError::MissingValue(argument.clone()))
                 }
                 if !argument.multiple {
                     // unwrap since we check `shift` is not empty
@@ -262,7 +262,7 @@ impl<K: Hash + Eq + Debug + Clone> ArgParser<K> {
                         // reach another argument, then go back
                         if value.starts_with("-") {
                             shift.push_back(value);
-                            return Ok(());
+                            return Ok(())
                         }
 
                         let value = argument.parse_f64(value)?;

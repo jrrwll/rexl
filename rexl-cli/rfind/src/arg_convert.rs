@@ -25,10 +25,10 @@ pub fn convert_args<'a>(parser: &ArgParser<Options>, context: &'a Context) -> Ma
             Err(err) => {
                 eprintln!(
                     "{}",
-                    context.format(
-                        "name-pattern.unknown-format",
-                        vec![s.to_string(), err.to_string()]
-                    )
+                    context.format("name-pattern.unknown-format", vec![
+                        s.to_string(),
+                        err.to_string()
+                    ])
                 );
                 process::exit(7);
             }
@@ -64,10 +64,10 @@ pub fn convert_args<'a>(parser: &ArgParser<Options>, context: &'a Context) -> Ma
             Err(err) => {
                 eprintln!(
                     "{}",
-                    context.format(
-                        "content-pattern.unknown-format",
-                        vec![s.to_string(), err.to_string()]
-                    )
+                    context.format("content-pattern.unknown-format", vec![
+                        s.to_string(),
+                        err.to_string()
+                    ])
                 );
                 process::exit(9);
             }

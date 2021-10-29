@@ -32,23 +32,23 @@ pub fn dollar(
             c = chr;
             i = ind;
         } else {
-            break;
+            break
         }
 
         if enter_dollar_brace {
             if c == '\\' {
                 if i == size - 1 {
-                    return Err(invalid_char_err(c, i));
+                    return Err(invalid_char_err(c, i))
                 }
                 chars.next(); // treat the next char as a normal char
-                continue;
+                continue
             }
             if c == ':' && colon_index == 0 {
                 colon_index = i;
-                continue;
+                continue
             }
             if c != '}' {
-                continue;
+                continue
             }
             // extract xxx from ${xxx}
             let right_index = if colon_index != 0 { colon_index } else { i };
@@ -74,11 +74,11 @@ pub fn dollar(
             }
             enter_dollar_brace = false;
             colon_index = 0;
-            continue;
+            continue
         }
         if enter_dollar {
             if is_variable_char(c) {
-                continue;
+                continue
             }
             let variable = s
                 .get(left_index..i)
@@ -91,11 +91,11 @@ pub fn dollar(
 
             previous = Some((i - 1, c));
             enter_dollar = false;
-            continue;
+            continue
         }
         if enter_positional {
             if is_number_char(c) {
-                continue;
+                continue
             }
             let variable = s
                 .get(left_index..i)
@@ -104,7 +104,7 @@ pub fn dollar(
                 InterpolationError::NumberParse(NumberParseValue {
                     offset: left_index,
                     source: variable.to_string(),
-                    error: e.to_string(),
+                    error:  e.to_string(),
                 })
             })?;
             n -= 1;
@@ -115,38 +115,38 @@ pub fn dollar(
             }
             previous = Some((i - 1, c));
             enter_positional = false;
-            continue;
+            continue
         }
         if i == size - 1 {
             result.push(c);
-            break;
+            break
         }
         // escape char
         if c == '\\' {
             let (_, next) = chars.next().ok_or_else(|| invalid_char_err(c, i + 1))?;
             result.push(next);
-            continue;
+            continue
         }
         if c != '$' {
             result.push(c);
-            continue;
+            continue
         }
         // then c is $
         let (i, next) = chars.next().ok_or_else(|| invalid_char_err(c, i + 1))?;
         if is_number_char(next) {
             left_index = i;
             enter_positional = true;
-            continue;
+            continue
         }
         if is_first_variable_char(next) {
             left_index = i;
             enter_dollar = true;
-            continue;
+            continue
         }
         if next == '{' {
             left_index = i + 1;
             enter_dollar_brace = true;
-            continue;
+            continue
         }
         result.push(c);
         result.push(next);

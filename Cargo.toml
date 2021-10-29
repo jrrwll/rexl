@@ -1,14 +1,11 @@
 [workspace]
 members = [
-    #learn
-    "learn/book",
-    "learn/macro",
-    "learn/daily",
     # lib
     "rexl",
+    "rexl-collection",
     "rexl-math",
     "rexl-matrix",
     # bin
     "rexl-cli/rfind",
-    "rexl-cli/rserve"
+    "rexl-cli/rserve",
 ]

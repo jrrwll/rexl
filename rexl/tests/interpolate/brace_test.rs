@@ -1,4 +1,4 @@
-use rexl::interpolate::{brace_named, brace_positional, brace_unwrap};
+use rexl::interpolate::{brace_named, brace_positional, brace_positional_unwrap};
 use std::collections::HashMap;
 
 #[test]
@@ -55,8 +55,8 @@ fn test_brace_named() {
 }
 
 #[test]
-fn test_brace_unwrap_utf8() {
-    let s = brace_unwrap("English, 简体中文, 🤣😆😁", &Vec::new());
+fn test_brace_positional_unwrap_utf8() {
+    let s = brace_positional_unwrap("English, 简体中文, 🤣😆😁", &Vec::new(), None);
     println!("{}", s)
 }
 

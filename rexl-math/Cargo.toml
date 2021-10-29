@@ -1,10 +1,10 @@
 [package]
 name = "rexl_math"
 version = "0.0.2"
-authors = ["tuke <bobby.j.strange@gmail.com>"]
-edition = "2018"
+authors = ["tuke <jrriwll@gmail.com>"]
+edition = "2021"
 description = """
-A simple mathematics library for Rust
+Mathematics Library for Rust
 """
 documentation = "https://github.com/bobbystrange/rexl/blob/master/rexl-math/README.md"
 readme = "README.md"
@@ -15,4 +15,4 @@ keywords = ["math"]
 categories = ["mathematics", "algorithms"]
 
 [dependencies]
-rexl = { path = "../rexl", version = "0.0.3", default-features = false }
+rexl = { path = "../rexl", version = "0.0.2", default-features = false }

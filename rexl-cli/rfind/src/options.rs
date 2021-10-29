@@ -5,7 +5,7 @@ use std::fmt::{Display, Formatter};
 pub fn parse_kind(v: Vec<String>) -> Result<u8, String> {
     let mut kind = 0;
     if v.is_empty() {
-        return Ok(0b1111_1111);
+        return Ok(0b1111_1111)
     }
     for s in v.iter() {
         if s == "f" || s == "file" {
@@ -15,7 +15,7 @@ pub fn parse_kind(v: Vec<String>) -> Result<u8, String> {
         } else if s == "l" || s == "link" {
             kind |= 0b0000_0100;
         } else {
-            return Err(s.to_string());
+            return Err(s.to_string())
         }
     }
     Ok(kind)
@@ -70,7 +70,7 @@ impl SizeOption {
 
     fn parse_one_by(self, s: &str) -> Option<(Self, u64)> {
         if s.len() == 2 {
-            return None;
+            return None
         }
         let s = &s[2..];
         let size = s.len();

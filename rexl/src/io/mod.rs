@@ -1,3 +1,3 @@
-pub use self::string_reader::*;
+pub use self::path::*;
 
-mod string_reader;
+mod path;

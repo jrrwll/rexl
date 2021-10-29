@@ -4,8 +4,7 @@ use std::ops::*;
 
 pub trait NumericMatrix:
     Matrix<Element = <Self as NumericMatrix>::Element>
-    + ElementaryTransformation<<Self as NumericMatrix>::Element>
-{
+    + ElementaryTransformation<<Self as NumericMatrix>::Element> {
     /// The element type.
     type Element: NumericElement
         + Add<Output = <Self as NumericMatrix>::Element>
@@ -102,12 +101,12 @@ pub trait NumericMatrix:
                         swapped = true;
                         // reverse sign
                         sign_reversed = !sign_reversed;
-                        break;
+                        break
                     }
                 }
                 // if not swapped
                 if !swapped {
-                    return None;
+                    return None
                 }
             }
 

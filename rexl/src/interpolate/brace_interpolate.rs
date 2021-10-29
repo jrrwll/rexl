@@ -8,7 +8,7 @@ pub fn brace(
 ) -> Result<String, InterpolationError> {
     let size = s.len();
     if size <= 1 {
-        return Ok(s.to_string());
+        return Ok(s.to_string())
     }
 
     let mut result = String::with_capacity(size_grow_up(size));
@@ -25,23 +25,23 @@ pub fn brace(
             c = chr;
             i = ind;
         } else {
-            break;
+            break
         }
 
         if enter_brace {
             if c == '\\' {
                 if i == size - 1 {
-                    return Err(invalid_char_err(c, i));
+                    return Err(invalid_char_err(c, i))
                 }
                 chars.next(); // treat the next char as a normal char
-                continue;
+                continue
             }
             if c == ':' && colon_index == 0 {
                 colon_index = i;
-                continue;
+                continue
             }
             if c != '}' {
-                continue;
+                continue
             }
             // extract xxx from ${xxx}
             let right_index = if colon_index != 0 { colon_index } else { i };
@@ -67,14 +67,14 @@ pub fn brace(
             }
             enter_brace = false;
             colon_index = 0;
-            continue;
+            continue
         }
         if enter_positional {
             if is_number_char(c) {
-                continue;
+                continue
             }
             if c != '}' {
-                return Err(invalid_char_err(c, i));
+                return Err(invalid_char_err(c, i))
             }
             let variable = s
                 .get(left_index..i)
@@ -88,21 +88,21 @@ pub fn brace(
                 add_default_value(&mut result, default_value, variable.to_string())?;
             }
             enter_positional = false;
-            continue;
+            continue
         }
         if i == size - 1 {
             result.push(c);
-            break;
+            break
         }
         // escape char
         if c == '\\' {
             let (_, next) = chars.next().ok_or_else(|| invalid_char_err(c, i + 1))?;
             result.push(next);
-            continue;
+            continue
         }
         if c != '{' {
             result.push(c);
-            continue;
+            continue
         }
         // then c is {
         let (i, next) = chars.next().ok_or_else(|| invalid_char_err(c, i + 1))?;
@@ -113,19 +113,19 @@ pub fn brace(
                 add_default_value_positional(&mut result, default_value, default_index)?;
             }
             default_index += 1;
-            continue;
+            continue
         }
         if is_number_char(next) {
             left_index = i;
             enter_positional = true;
-            continue;
+            continue
         }
         if is_first_variable_char(next) {
             left_index = i;
             enter_brace = true;
-            continue;
+            continue
         }
-        return Err(invalid_char_err(next, i));
+        return Err(invalid_char_err(next, i))
     }
     Ok(result)
 }

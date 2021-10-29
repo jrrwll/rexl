@@ -52,10 +52,10 @@ pub fn parse_args(context: &Context, args: Vec<String>) -> Main {
                 let MismatchedKindValue { argument, passed } = value;
                 eprintln!(
                     "{}",
-                    context.format(
-                        "arg.mismatched-kind",
-                        vec![argument.key.to_string(), passed.to_string()]
-                    )
+                    context.format("arg.mismatched-kind", vec![
+                        argument.key.to_string(),
+                        passed.to_string()
+                    ])
                 );
                 process::exit(3);
             }
@@ -74,10 +74,11 @@ pub fn parse_args(context: &Context, args: Vec<String>) -> Main {
                 } = value;
                 eprintln!(
                     "{}",
-                    context.format(
-                        "arg.number-parse-error",
-                        vec![source, argument.key.to_string(), error]
-                    )
+                    context.format("arg.number-parse-error", vec![
+                        source,
+                        argument.key.to_string(),
+                        error
+                    ])
                 );
                 process::exit(5);
             }

@@ -4,8 +4,7 @@ use std::ops::*;
 
 /// A matrix.
 pub trait Matrix:
-    IndexMut<(usize, usize), Output = <Self as Matrix>::Element> + Size + Sized + Clone
-{
+    IndexMut<(usize, usize), Output = <Self as Matrix>::Element> + Size + Sized + Clone {
     /// basic functions
 
     /// The element type.

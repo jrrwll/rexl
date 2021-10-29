@@ -11,11 +11,11 @@ use std::ptr;
 #[derive(Clone, Debug, PartialEq)]
 pub struct Multidimensional<T: Element> {
     /// The number of rows.
-    pub rows: usize,
+    pub rows:    usize,
     /// The number of columns.
     pub columns: usize,
     /// The values stored in the column-major order.
-    pub values: Vec<Vec<T>>,
+    pub values:  Vec<Vec<T>>,
 }
 
 impl<T: Element> Multidimensional<T> {

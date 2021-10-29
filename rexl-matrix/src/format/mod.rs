@@ -29,13 +29,12 @@ macro_rules! implement_size {
 macro_rules! implement_numeric_matrix {
     ($name:ident) => {
         impl<T> NumericMatrix for $name<T>
-        where
-            T: NumericElement
+        where T: NumericElement
                 + Add<Output = T>
                 + Sub<Output = T>
                 + Mul<Output = T>
                 + Div<Output = T>
-                + Neg<Output = T>,
+                + Neg<Output = T>
         {
             type Element = T;
         }
