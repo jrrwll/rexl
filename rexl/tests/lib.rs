@@ -7,10 +7,6 @@ mod interpolate;
 #[cfg(test)]
 mod io;
 #[cfg(test)]
-mod qrcode;
-#[cfg(test)]
-mod qrcode;
-#[cfg(test)]
 mod sort;
 #[cfg(test)]
 mod text;
