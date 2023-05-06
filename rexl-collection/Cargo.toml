@@ -1,6 +1,6 @@
 [package]
-name = "rexl-collection"
-version = "0.0.4"
+name = "rexl_collection"
+version = "0.0.5"
 authors = ["tuke <jrriwll@gmail.com>"]
 edition = "2021"
 description = """
@@ -15,4 +15,4 @@ keywords = ["collection", "tree", "btree"]
 categories = ["data-structures"]
 
 [dependencies]
-rexl = { path = "../rexl", version = "0.0.4", default-features = false }
+rexl = { path = "../rexl", version = "0.0.5", default-features = false }

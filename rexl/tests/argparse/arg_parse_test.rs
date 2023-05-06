@@ -1,9 +1,8 @@
-use rexl::cli::ArgParser;
+use rexl::argparse::ArgParser;
 
 #[test]
 fn test_arg_parser() {
     let args = vec![
-        "aux",
         "-n3",
         "-o",
         "yaml",
@@ -33,13 +32,10 @@ fn test_arg_parser() {
     println!("{:?}", &args);
 
     let mut parser = get_parser();
-    match parser.parse_bsd(args) {
+    match parser.parse(args) {
         Ok(_) => {
             println!("integer P:\t{:?}", parser.get_integer("P"));
             println!("bool rm:\t{:?}", parser.get_bool("rm"));
-            println!("bool a:\t{:?}", parser.get_bool("a"));
-            println!("bool u:\t{:?}", parser.get_bool("u"));
-            println!("bool x:\t{:?}", parser.get_bool("x"));
             println!("strings o:\t{:?}", parser.get_strings("o"));
             println!("strings H:\t{:?}", parser.get_strings("H"));
             println!("strings R:\t{:?}", parser.get_strings("R"));
@@ -48,9 +44,6 @@ fn test_arg_parser() {
 
             assert_eq!(Some(&6379), parser.get_integer("P"));
             assert_eq!(false, parser.get_bool("rm"));
-            assert_eq!(true, parser.get_bool("a"));
-            assert_eq!(true, parser.get_bool("u"));
-            assert_eq!(true, parser.get_bool("x"));
             assert_eq!(&vec!["yaml".to_string()], parser.get_strings("o").unwrap());
             assert_eq!(
                 &vec![
@@ -86,9 +79,6 @@ fn get_parser() -> ArgParser<String> {
         .add_integer_multiple("n", vec!["n", "number"])
         .add_integer("P", vec!["P", "port"])
         .add_bool("rm", vec!["r", "rm", "remove"])
-        .add_bool("a", vec!["a"])
-        .add_bool("u", vec!["u"])
-        .add_bool("x", vec!["x"])
         .add_multiple("o", vec!["o", "output"])
         .add_multiple("H", vec!["H", "header"])
         .add_multiple("R", vec!["resource", "R"])

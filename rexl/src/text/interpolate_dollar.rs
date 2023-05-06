@@ -1,7 +1,6 @@
 use std::collections::HashMap;
-
-use crate::interpolate::*;
 use crate::text::*;
+use crate::text::interpolate::*;
 
 ///! string interpolation by dollar sign
 /// `[$][a-zA-Z0-9]+` and `[$]{[a-zA-Z0-9]+:.*}` is supported

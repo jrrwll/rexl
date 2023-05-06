@@ -15,4 +15,4 @@ keywords = ["math"]
 categories = ["mathematics", "algorithms"]
 
 [dependencies]
-rexl = { path = "../rexl", version = "0.0.4", default-features = false }
+rexl = { path = "../rexl", version = "0.0.5", default-features = false }

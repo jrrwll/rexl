@@ -1,23 +1,13 @@
 use std::collections::{HashMap, LinkedList};
 use std::hash::Hash;
 
-use crate::cli::*;
+use crate::argparse::*;
 use std::fmt::Debug;
 
 static MULTIPLE_VALUE_SIZE: usize = 16;
 
 impl<K: Hash + Eq + Debug + Clone> ArgParser<K> {
-    #[inline]
     pub fn parse(&mut self, args: Vec<String>) -> Result<(), ArgParserError<K>> {
-        self._parse(args, false)
-    }
-
-    #[inline]
-    pub fn parse_bsd(&mut self, args: Vec<String>) -> Result<(), ArgParserError<K>> {
-        self._parse(args, true)
-    }
-
-    fn _parse(&mut self, args: Vec<String>, bsd: bool) -> Result<(), ArgParserError<K>> {
         let mut shift = LinkedList::new();
         for arg in args {
             shift.push_front(arg)
@@ -28,14 +18,6 @@ impl<K: Hash + Eq + Debug + Clone> ArgParser<K> {
         }
 
         self._init_name_key_map();
-
-        // handle bsd part
-        // like ps -ef ... or ps aux ...
-        if bsd {
-            if let Some(name) = shift.pop_back() {
-                self._parse_bsd_args(&name)?
-            }
-        }
 
         // handle no-bsd part
         // -n default -oyaml --type pom --rm=true --force
@@ -76,17 +58,6 @@ impl<K: Hash + Eq + Debug + Clone> ArgParser<K> {
             }
         }
         Err(ArgParserError::UnexpectedArg(name.to_string()))
-    }
-
-    fn _parse_bsd_args(&mut self, arg_names: &String) -> Result<(), ArgParserError<K>> {
-        let start_index = if arg_names.starts_with("-") { 1 } else { 0 };
-        let size = arg_names.len();
-        for i in start_index..size {
-            let arg_name = &arg_names[i..(i + 1)];
-            let (key, _) = self._get_key(arg_name)?;
-            self.bool_map.insert(key, true);
-        }
-        Ok(())
     }
 
     fn _parse_double_minus(

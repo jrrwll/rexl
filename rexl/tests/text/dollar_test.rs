@@ -1,4 +1,4 @@
-use rexl::interpolate::{dollar_named, dollar_positional};
+use rexl::text::{dollar_named, dollar_positional};
 use std::collections::HashMap;
 
 #[test]

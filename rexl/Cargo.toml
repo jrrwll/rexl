@@ -1,15 +1,15 @@
 [package]
 name = "rexl"
-version = "0.0.4"
+version = "0.0.5"
 authors = ["tuke <jrriwll@gmail.com>"]
 edition = "2021"
 description = """
 Common Library for Rust
 """
-documentation = "https://github.com/bobbystrange/rexl/blob/master/rexl/README.md"
+documentation = "https://github.com/jrrwll/rexl/blob/master/rexl/README.md"
 readme = "README.md"
-homepage = "https://github.com/bobbystrange/rexl/tree/master/rexl"
-repository = "https://github.com/bobbystrange/rexl/tree/master/rexl"
+homepage = "https://github.com/jrrwll/rexl/tree/master/rexl"
+repository = "https://github.com/jrrwll/rexl/tree/master/rexl"
 license = "Apache-2.0"
 keywords = ["argparser", "timeit", "interpolation"]
 categories = ["algorithms"]

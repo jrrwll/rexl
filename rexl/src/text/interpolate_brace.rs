@@ -1,7 +1,6 @@
 use std::collections::HashMap;
-
-use crate::interpolate::*;
 use crate::text::*;
+use crate::text::interpolate::*;
 
 pub fn brace(
     s: &str, named: &HashMap<String, String>, positional: &Vec<String>, default_value: Option<&str>,

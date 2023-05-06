@@ -1,4 +1,4 @@
-use rexl::interpolate::{brace_named, brace_positional, brace_positional_unwrap};
+use rexl::text::{brace_named, brace_positional, brace_positional_unwrap};
 use std::collections::HashMap;
 
 #[test]
