@@ -1,0 +1,24 @@
+[package]
+name = "rexl_argparser"
+version = "0.0.1"
+authors = ["tuke <jrriwll@gmail.com>"]
+edition = "2021"
+description = """
+ArgParser
+"""
+documentation = "https://github.com/bobbystrange/rexl/blob/master/rexl-argparser/README.md"
+readme = "README.md"
+homepage = "https://github.com/bobbystrange/rexl/tree/master/rexl-argparser"
+repository = "https://github.com/bobbystrange/rexl/tree/master/rexl-argparser"
+license = "Apache-2.0"
+keywords = ["argparser"]
+categories = ["algorithms"]
+
+[lib]
+proc-macro = true
+
+[dependencies]
+proc-macro2 = "1.0"
+syn = "2.0"
+quote = "1.0"
+rexl = { path = "../rexl", version = "0.0.5", default-features = false }

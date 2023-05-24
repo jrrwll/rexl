@@ -3,6 +3,7 @@ members = [
     # lib
     "rexl",
     "rexl-collection",
+    "rexl-argparser",
     "rexl-math",
     "rexl-matrix",
     # bin
