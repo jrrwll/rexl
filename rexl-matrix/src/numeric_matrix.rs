@@ -101,12 +101,12 @@ pub trait NumericMatrix:
                         swapped = true;
                         // reverse sign
                         sign_reversed = !sign_reversed;
-                        break
+                        break;
                     }
                 }
                 // if not swapped
                 if !swapped {
-                    return None
+                    return None;
                 }
             }
 

@@ -8,6 +8,6 @@ rustc -O -C prefer-dynamic main.rs
 # remove symbol information
 /usr/bin/strip target/release/some_bin
 
-# comopress
+# compress
 upx --best --lzma target/release/some_bin
 ```

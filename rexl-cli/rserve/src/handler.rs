@@ -33,7 +33,8 @@ pub fn index_at(url_path: &str) -> Result<HttpResponse, String> {
 fn index_file(p: &str, file_len: usize) -> Result<HttpResponse, String> {
     let mut file = File::open(p).map_err(|err| err.to_string())?;
     let mut buf = Vec::with_capacity(file_len);
-    file.read_to_end(&mut buf).map_err(|err| err.to_string())?;
+    file.read_to_end(&mut buf)
+        .map_err(|err| err.to_string())?;
 
     let mut resp = HttpResponse::Ok();
     if let Some(mime) = mime_from_filename(p) {
@@ -48,11 +49,7 @@ fn index_dir(file_path: &str, url_path: &str) -> Result<HttpResponse, String> {
     for r in rd {
         let entry = r.map_err(|err| err.to_string())?;
         let filename = entry.file_name().into_string().map_err(|err| {
-            format!(
-                "error occurred on {}/{}!",
-                file_path,
-                err.to_string_lossy().to_string()
-            )
+            format!("error occurred on {}/{}!", file_path, err.to_string_lossy().to_string())
         })?;
 
         let ft = entry.file_type().map_err(|err| err.to_string())?;

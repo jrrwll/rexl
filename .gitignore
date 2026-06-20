@@ -4,6 +4,7 @@
 # cargo
 /target
 Cargo.lock
+rustc-ice*.txt
 # cmake
 CMakeCache.txt
 CMakeFiles/

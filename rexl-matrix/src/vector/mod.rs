@@ -76,23 +76,15 @@ impl<T: Element> Vector<T> {
     }
 
     #[inline]
-    pub fn iter(&self) -> VectorIterator<T> {
+    pub fn iter(&self) -> VectorIterator<'_, T> {
         let size = self.len();
-        VectorIterator {
-            vector: self,
-            taken: 0,
-            size,
-        }
+        VectorIterator { vector: self, taken: 0, size }
     }
 
     #[inline]
-    pub fn iter_mut(&mut self) -> VectorIteratorMut<T> {
+    pub fn iter_mut(&mut self) -> VectorIteratorMut<'_, T> {
         let size = self.len();
-        VectorIteratorMut {
-            vector: self,
-            taken: 0,
-            size,
-        }
+        VectorIteratorMut { vector: self, taken: 0, size }
     }
 }
 
@@ -110,12 +102,14 @@ impl<T: NumericElement + Add<Output = T> + Sub<Output = T> + Mul<Output = T> + D
 
     #[inline]
     pub fn sum(&self) -> T {
-        self.iter().fold(T::zero(), |sum, &elem| sum + elem)
+        self.iter()
+            .fold(T::zero(), |sum, &elem| sum + elem)
     }
 
     #[inline]
     pub fn product(&self) -> T {
-        self.iter().fold(T::one(), |sum, &elem| sum * elem)
+        self.iter()
+            .fold(T::one(), |sum, &elem| sum * elem)
     }
 
     #[inline]
@@ -148,7 +142,7 @@ impl<T: NumericElement + Add<Output = T> + Sub<Output = T> + Mul<Output = T> + D
         y[index] = ai;
         for i in 0..size {
             if i == index {
-                continue
+                continue;
             }
             if i > index {
                 y[i] = ai + T::from_usize(i - index) * diff;

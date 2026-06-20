@@ -1,11 +1,31 @@
 [workspace]
+resolver = "3"
 members = [
     # lib
     "rexl",
-    "rexl-collection",
-    "rexl-math",
+    "rexl-macros",
     "rexl-matrix",
     # bin
     "rexl-cli/rfind",
     "rexl-cli/rserve",
+    "rexl-cli/rapate",
 ]
+
+[workspace.package]
+version = "0.0.5"
+edition = "2024"
+authors = ["tuke <jrriwll@gmail.com>"]
+license = "Apache-2.0"
+homepage = "https://github.com/jrrwll/rexl"
+repository = "https://github.com/jrrwll/rexl"
+
+include = [
+    "/Cargo.toml",
+    "/README.md",
+    "LICENSE*",
+    "/src/**/*",
+]
+
+[workspace.dependencies]
+rexl = { path = "rexl", version = "0.0.5" }
+rexl_macros = { path = "rexl-macros", version = "0.0.5" }

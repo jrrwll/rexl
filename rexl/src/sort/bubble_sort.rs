@@ -17,7 +17,7 @@ where E: PartialOrd + Sized {
         }
 
         if swapped_count == 0 {
-            break
+            break;
         }
         i = i + 1;
     }

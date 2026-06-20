@@ -1,6 +1,6 @@
 [package]
-name = "rexl-matrix"
-version = "0.0.2"
+name = "rexl_matrix"
+version = "0.0.3"
 authors = ["tuke <jrriwll@gmail.com>"]
 edition = "2021"
 description = """
@@ -15,7 +15,7 @@ keywords = ["matrix"]
 categories = ["mathematics", "algorithms"]
 
 [dependencies]
-rexl = { path = "../rexl", version = "0.0.4", default-features = false }
+rexl = { path = "../rexl", version = "0.0.5", default-features = false }
 
 [dev-dependencies]
 matrix = "0.22.0"

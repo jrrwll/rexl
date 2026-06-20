@@ -1,5 +1,4 @@
-pub use self::iter::*;
-pub use self::ops::*;
+// pub use self::iter::*;
 
 mod iter;
 mod ops;
@@ -10,32 +9,24 @@ use std::{cmp, ptr};
 #[derive(Clone, Debug, PartialEq)]
 pub struct Conventional<T: Element> {
     /// The number of rows.
-    pub rows:    usize,
+    pub rows: usize,
     /// The number of columns.
     pub columns: usize,
     /// The values stored in the column-major order.
-    pub values:  Vec<T>,
+    pub values: Vec<T>,
 }
 
 impl<T: Element> Conventional<T> {
     /// Create a zero matrix.
     pub fn new<S: Size>(size: S) -> Self {
         let (rows, columns) = size.dimensions();
-        Conventional {
-            rows,
-            columns,
-            values: vec![T::zero(); columns * rows],
-        }
+        Conventional { rows, columns, values: vec![T::zero(); columns * rows] }
     }
 
     /// Create a matrix from a vector.
     pub fn from_vec<S: Size>(size: S, values: Vec<T>) -> Self {
         let (rows, columns) = size.dimensions();
-        Conventional {
-            rows,
-            columns,
-            values,
-        }
+        Conventional { rows, columns, values }
     }
 
     /// Zero out the content.
@@ -57,12 +48,13 @@ impl<T: Element> Conventional<T> {
 
         if old_rows == rows {
             if old_columns > columns {
-                self.values.truncate((old_columns - columns) * rows);
+                self.values
+                    .truncate((old_columns - columns) * rows);
             } else {
                 self.values
                     .extend(vec![T::zero(); (columns - old_columns) * rows]);
             }
-            return
+            return;
         }
 
         let mut matrix = Self::zero(size);

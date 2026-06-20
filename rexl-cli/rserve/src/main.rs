@@ -12,12 +12,7 @@ async fn main() -> std::io::Result<()> {
     env::set_var("RUST_LOG", "actix_web=debug");
 
     let args = env::args().skip(1).collect();
-    let config = Config::from_args(args);
-
-    let Config {
-        base_path,
-        bind_address,
-    } = config;
+    let Config { base_path, bind_address } = Config::new(args);
 
     println!("serving {} on {}", base_path, bind_address);
     HttpServer::new(move || App::new().route(&base_path, web::get().to(index)))

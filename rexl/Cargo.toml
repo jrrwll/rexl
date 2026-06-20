@@ -1,15 +1,34 @@
 [package]
 name = "rexl"
-version = "0.0.4"
-authors = ["tuke <jrriwll@gmail.com>"]
-edition = "2021"
 description = """
 Common Library for Rust
 """
-documentation = "https://github.com/bobbystrange/rexl/blob/master/rexl/README.md"
+keywords = ["argparser", "timeit", "interpolation", "collection"]
+categories = ["algorithms", "data-structures", "mathematics"]
 readme = "README.md"
-homepage = "https://github.com/bobbystrange/rexl/tree/master/rexl"
-repository = "https://github.com/bobbystrange/rexl/tree/master/rexl"
-license = "Apache-2.0"
-keywords = ["argparser", "timeit", "interpolation"]
-categories = ["algorithms"]
+
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+include.workspace = true
+
+[features]
+default = ["derive"]
+
+derive = ["dep:rexl_macros"]
+serde = ["dep:serde", "dep:serde_json"]
+chrono = ["dep:chrono"]
+lettre = ["dep:lettre"]
+
+[dependencies]
+rexl_macros = { workspace = true, optional = true }
+chrono = { version = "0.4.42", optional = true }
+lettre = { version = "0.11.19", optional = true, default-features = true }
+serde = { version = "1", features = ["derive"], optional = true }
+serde_json = { version = "1", optional = true }
+
+[dev-dependencies]
+chrono = "0.4.42"

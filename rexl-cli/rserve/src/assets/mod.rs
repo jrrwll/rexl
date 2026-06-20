@@ -1,4 +1,4 @@
-use rexl::interpolate::dollar_named_unwrap;
+use rexl::text::dollar_named_unwrap;
 use std::collections::HashMap;
 
 pub const TEMPLATE: &'static str = include_str!("./template.html");
@@ -8,7 +8,7 @@ pub fn format_html(title: &str, path: &str, lis: &str) -> String {
     named.insert("title".to_owned(), title.to_owned());
     named.insert("path".to_owned(), path.to_owned());
     named.insert("lis".to_owned(), lis.to_owned());
-    return dollar_named_unwrap(TEMPLATE, &named, None)
+    return dollar_named_unwrap(TEMPLATE, &named, None);
 }
 
 pub fn format_li(name: &str, path: &str, clazz: &str) -> String {

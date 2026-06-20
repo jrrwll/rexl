@@ -1,5 +1,4 @@
 pub use self::iter::*;
-pub use self::ops::*;
 
 mod iter;
 mod ops;
@@ -11,32 +10,24 @@ use std::ptr;
 #[derive(Clone, Debug, PartialEq)]
 pub struct Multidimensional<T: Element> {
     /// The number of rows.
-    pub rows:    usize,
+    pub rows: usize,
     /// The number of columns.
     pub columns: usize,
     /// The values stored in the column-major order.
-    pub values:  Vec<Vec<T>>,
+    pub values: Vec<Vec<T>>,
 }
 
 impl<T: Element> Multidimensional<T> {
     /// Create a zero matrix.
     pub fn new<S: Size>(size: S) -> Self {
         let (rows, columns) = size.dimensions();
-        Multidimensional {
-            rows,
-            columns,
-            values: vec![vec![T::zero(); rows]; columns],
-        }
+        Multidimensional { rows, columns, values: vec![vec![T::zero(); rows]; columns] }
     }
 
     /// Create a matrix from a vector.
     pub fn from_vec<S: Size>(size: S, values: Vec<Vec<T>>) -> Self {
         let (rows, columns) = size.dimensions();
-        Multidimensional {
-            rows,
-            columns,
-            values,
-        }
+        Multidimensional { rows, columns, values }
     }
 
     /// Zero out the content.
@@ -105,7 +96,7 @@ impl<T: Element> Multidimensional<T> {
             .join("\n")
     }
 
-    pub fn iter(&self, variant: Variant) -> MultidimensionalIterator<T> {
+    pub fn iter(&self, variant: Variant) -> MultidimensionalIterator<'_, T> {
         let (rows, columns) = self.dimensions();
         MultidimensionalIterator {
             matrix: self,
@@ -117,7 +108,7 @@ impl<T: Element> Multidimensional<T> {
         }
     }
 
-    pub fn iter_mut(&mut self, variant: Variant) -> MultidimensionalIteratorMut<T> {
+    pub fn iter_mut(&mut self, variant: Variant) -> MultidimensionalIteratorMut<'_, T> {
         let (rows, columns) = self.dimensions();
         MultidimensionalIteratorMut {
             matrix: self,

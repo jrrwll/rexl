@@ -1,0 +1,8 @@
+[package]
+name = "rapate"
+version = "0.1.0"
+authors = ["tuke <jrriwll@gmail.com>"]
+edition = "2024"
+
+[dependencies]
+rexl = { path = "../../rexl", version = "0.0.5", default-features = true}

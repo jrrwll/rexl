@@ -2,14 +2,10 @@ use std::fs::canonicalize;
 use std::path::Path;
 
 pub fn base_name(p: &str) -> &str {
-    let path = if p.ends_with("/") {
-        &p[0..p.len() - 1]
-    } else {
-        p
-    };
+    let path = if p.ends_with("/") { &p[0..p.len() - 1] } else { p };
 
     if path.len() == 0 {
-        return "/"
+        return "/";
     }
 
     match path.rfind('/') {

@@ -1,4 +1,4 @@
-use crate::text::load_properties_from_str;
+use crate::io::load_properties_from_str;
 use std::collections::HashMap;
 
 pub const MEDIA_TYPES: &'static str = include_str!("media-types.properties");
