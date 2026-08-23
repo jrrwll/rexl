@@ -5,7 +5,6 @@ members = [
     "rexl",
     "rexl-macros",
     "rexl-matrix",
-    "rexl-wrap",
     # bin
     "rexl-cli/rfind",
     "rexl-cli/rserve",
