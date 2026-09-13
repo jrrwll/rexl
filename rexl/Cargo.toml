@@ -17,18 +17,10 @@ include.workspace = true
 
 [features]
 default = ["derive"]
-
 derive = ["dep:rexl_macros"]
-serde = ["dep:serde", "dep:serde_json"]
-chrono = ["dep:chrono"]
-lettre = ["dep:lettre"]
 
 [dependencies]
 rexl_macros = { workspace = true, optional = true }
-chrono = { version = "0.4.42", optional = true }
-lettre = { version = "0.11.19", optional = true, default-features = true }
-serde = { version = "1", features = ["derive"], optional = true }
-serde_json = { version = "1", optional = true }
 
 [dev-dependencies]
 chrono = "0.4.42"
